@@ -1,0 +1,74 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  username String [unique, not null]
+  password String [not null]
+  role Role [not null, default: 'USER']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Research {
+  id String [pk]
+  title String [not null]
+  startDate String [not null]
+  endDate String [not null]
+  candidates Candidate [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Vote Vote [not null]
+}
+
+Table Voter {
+  id String [pk]
+  name String [not null]
+  phoneNumber String
+  lat String [not null]
+  long String [not null]
+  Candidate Candidate [not null]
+  candidateId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Vote Vote [not null]
+}
+
+Table Vote {
+  id String [pk]
+  voter Voter [not null]
+  voterId String [not null]
+  candidate Candidate [not null]
+  candidateId String [not null]
+  research Research [not null]
+  researchId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Candidate {
+  id String [pk]
+  name String [unique, not null]
+  imgUrl String [not null]
+  votes Int [not null, default: 0]
+  Research Research
+  researchId String
+  Voters Voter [not null]
+  Vote Vote [not null]
+}
+
+Enum Role {
+  USER
+  ADMIN
+}
+
+Ref: Voter.candidateId > Candidate.id
+
+Ref: Vote.voterId > Voter.id
+
+Ref: Vote.candidateId > Candidate.id
+
+Ref: Vote.researchId > Research.id
+
+Ref: Candidate.researchId > Research.id
