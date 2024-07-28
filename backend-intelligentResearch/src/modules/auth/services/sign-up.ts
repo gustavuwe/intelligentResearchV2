@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { SignUpSchema } from '../schemas/sign-up'
-import * as bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 export const signUp = async (data: SignUpSchema) => {
+  console.log(data.password)
   const hashedPassword = bcrypt.hashSync(data.password, 10)
 
   return prisma.user.create({
@@ -11,6 +12,7 @@ export const signUp = async (data: SignUpSchema) => {
     },
     select: {
       id: true,
+      username: true,
     },
   })
 }

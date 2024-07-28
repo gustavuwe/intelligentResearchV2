@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "tsx watch src/server.ts",
-    "start": "node build/server.js",
+    "start:dev": "tsx watch src/index.ts",
+    "start": "node build/index.js",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",
     "@types/bcryptjs": "2.4.6",
+    "@types/jsonwebtoken": "9.0.6",
     "@types/node": "^20.14.12",
     "@types/supertest": "6.0.2",
     "@vitest/ui": "2.0.4",
@@ -39,11 +40,13 @@
     "vitest": "2.0.4"
   },
   "dependencies": {
+    "@fastify/cookie": "9.3.1",
     "@fastify/jwt": "8.0.1",
     "@prisma/client": "^5.17.0",
     "bcryptjs": "2.4.3",
     "dotenv": "16.4.5",
     "fastify": "^4.28.1",
+    "jsonwebtoken": "9.0.2",
     "zod": "3.23.8"
   }
 }

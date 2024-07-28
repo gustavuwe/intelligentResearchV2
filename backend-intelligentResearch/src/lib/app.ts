@@ -3,17 +3,23 @@ import fastifyJwt, { FastifyJWTOptions } from '@fastify/jwt'
 import { ZodError } from 'zod'
 import { env } from './env'
 import { registerRoutes } from '../router'
+import fastifyCookie from '@fastify/cookie'
 
 export const app = Fastify()
 
 const jwtOptions: FastifyJWTOptions = {
   secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
   sign: {
-    expiresIn: '3d', // global configuration of expiration time
+    expiresIn: '10m',
   },
 }
 
 app.register(fastifyJwt, jwtOptions)
+app.register(fastifyCookie)
 app.register(registerRoutes)
 
 app.setErrorHandler((error, _, reply) => {
