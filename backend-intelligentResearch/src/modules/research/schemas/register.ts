@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const CandidateSchema = z.object({
+export const CandidateSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   imgUrl: z.string(),
@@ -10,7 +10,7 @@ const CandidateSchema = z.object({
   Vote: z.array(z.string()),
 })
 
-const VoteSchema = z.object({
+export const VoteSchema = z.object({
   id: z.string().optional(),
   voterId: z.string(),
   candidateId: z.string(),

@@ -1,1 +1,2 @@
-export * from './registerResearch'
+export * from './register'
+export * from './update'

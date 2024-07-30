@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { registerResearchSchema } from '../schemas/registerResearch'
+import { registerResearchSchema } from '../schemas/register'
 import * as service from '../services'
 
-export const registerResearch = async (
+export const register = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
@@ -12,7 +12,7 @@ export const registerResearch = async (
     return reply.status(400).send(data.error)
   }
   try {
-    const research = await service.registerResearch(data.data)
+    const research = await service.register(data.data)
 
     return reply.status(201).send({ research })
   } catch (err) {

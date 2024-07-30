@@ -2,9 +2,9 @@ import { prisma } from '@/lib/prisma'
 import {
   RegisterResearchSchema,
   registerResearchSchema,
-} from '../schemas/registerResearch'
+} from '../schemas/register'
 
-export const registerResearch = async (data: RegisterResearchSchema) => {
+export const register = async (data: RegisterResearchSchema) => {
   const parsedData = registerResearchSchema.parse(data)
 
   return prisma.research.create({
