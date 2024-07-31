@@ -22,7 +22,7 @@ export const registerResearchSchema = z.object({
   startDate: z.string(),
   endDate: z.string(),
   candidates: z.array(CandidateSchema),
-  vote: z.array(VoteSchema),
+  Vote: z.array(VoteSchema),
 })
 
 export type RegisterResearchSchema = z.infer<typeof registerResearchSchema>

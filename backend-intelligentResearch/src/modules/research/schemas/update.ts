@@ -25,7 +25,7 @@ export const updateResearchSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   candidates: z.array(updateCandidateSchema).optional(),
-  vote: z.array(updateVoteSchema).optional(),
+  Vote: z.array(updateVoteSchema).optional(),
 })
 
 export type UpdateResearchSchema = z.infer<typeof updateResearchSchema>

@@ -21,7 +21,7 @@ export const register = async (data: RegisterResearchSchema) => {
         })),
       },
       Vote: {
-        create: parsedData.vote.map((vote) => ({
+        create: parsedData.Vote.map((vote) => ({
           id: vote.id,
           voterId: vote.voterId,
           candidateId: vote.candidateId,

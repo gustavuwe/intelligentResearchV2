@@ -1,9 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import {
-  UpdateResearchSchema,
-  updateResearchSchema,
-  updateCandidateSchema,
-} from '../schemas/update'
+import { UpdateResearchSchema } from '../schemas/update'
 
 // TODO: update the research data like title, desc, and more.
 export const update = async (data: UpdateResearchSchema) => {
@@ -25,28 +21,24 @@ export const update = async (data: UpdateResearchSchema) => {
       title: data.title ?? research.title,
       startDate: data.startDate ?? research.startDate,
       endDate: data.endDate ?? research.endDate,
-      candidates: {
-        upsert: data.candidates.map((candidate) => ({ // TODO: fix this type error
-          // fix this
-          where: { id: candidate.id },
-          update: {
-            name: candidate.name,
-            imgUrl: candidate.imgUrl,
-            votes: candidate.votes,
-            researchId: candidate.researchId,
-            Voters: candidate.Voters,
-            Vote: candidate.Vote,
-          },
-          create: {
-            name: candidate.name,
-            imgUrl: candidate.imgUrl,
-            votes: candidate.votes,
-            researchId: research.id,
-            Voters: candidate.Voters,
-            Vote: candidate.Vote,
-          },
-        })),
-      },
     },
   })
+
+  if (data.candidates) {
+    await prisma.candidate.updateMany({
+      where: {
+        researchId: research.id,
+      },
+      data: data.candidates,
+    })
+  }
+
+  if (data.Vote) {
+    await prisma.vote.updateMany({
+      where: {
+        researchId: data.id,
+      },
+      data: data.Vote,
+    })
+  }
 }
