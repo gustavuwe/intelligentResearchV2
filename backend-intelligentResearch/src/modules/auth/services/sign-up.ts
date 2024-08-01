@@ -13,6 +13,7 @@ export const signUp = async (data: SignUpSchema) => {
     select: {
       id: true,
       username: true,
+      role: true,
     },
   })
 }

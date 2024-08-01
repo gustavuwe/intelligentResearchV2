@@ -14,7 +14,7 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
     const user = await service.signUp(data.data)
 
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, username: user.username, role: user.role },
       String(env.JWT_SECRET),
     )
 
@@ -26,6 +26,7 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
       .send({
         id: user.id,
         username: user.username,
+        role: user.role,
       })
 
     return reply.status(200).send({ token })

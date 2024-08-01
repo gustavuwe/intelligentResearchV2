@@ -1,4 +1,5 @@
 import '@fastify/jwt'
+import { JwtPayload } from 'jsonwebtoken'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -6,8 +7,6 @@ declare module 'fastify' {
   }
 
   interface FastifyRequest {
-    user: {
-      userId: number
-    }
+    user: JwtPayload
   }
 }
