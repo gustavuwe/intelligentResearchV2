@@ -1,12 +1,12 @@
-import '@fastify/jwt'
-import { JwtPayload } from 'jsonwebtoken'
+// import '@fastify/jwt'
+// import { JwtPayload } from '../src/types/jwtPayload'
 
-declare module 'fastify' {
-  interface FastifyInstance {
-    jwt: FastifyJWT
-  }
+// declare module 'fastify' {
+//   interface FastifyInstance {
+//     jwt: FastifyJWT
+//   }
 
-  interface FastifyRequest {
-    user: JwtPayload
-  }
-}
+//   interface FastifyRequest {
+//     user: JwtPayload
+//   }
+// }

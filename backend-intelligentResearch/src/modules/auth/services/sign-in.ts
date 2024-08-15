@@ -11,6 +11,7 @@ export const signIn = async (data: SignInSchema) => {
       id: true,
       username: true,
       password: true, // maybe we don't need this but for now it's ok, but not secure
+      role: true,
     },
   })
   const isUserPassword = bcrypt.compareSync(data.password, user.password)

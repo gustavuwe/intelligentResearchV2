@@ -15,35 +15,48 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
       return reply.status(404).send({ message: 'User not found.' })
     }
 
+    const token = await reply.jwtSign(
+      {},
+      {
+        sign: {
+          sub: user.id,
+        },
+      },
+    )
+
+    return reply.status(200).send({ token })
+
     // const token = request.server.jwt.sign(
     //   { id: user.id, username: user.username },
     //   { expiresIn: '3d' },
     // )
 
-    const token = reply.jwtSign({
-      sign: {
-        sub: user.id,
-      },
-    })
+    // const token = reply.jwtSign({
+    //   sign: {
+    //     sub: user.id,
+    //     role: user.role,
+    //   },
+    // })
 
-    const refreshToken = await reply.jwtSign({
-      sign: {
-        sub: user.id,
-        expiresIn: '7d',
-      },
-    })
+    // const refreshToken = await reply.jwtSign({
+    //   sign: {
+    //     sub: user.id,
+    //     role: user.role,
+    //     expiresIn: '7d',
+    //   },
+    // })
 
-    return reply
-      .setCookie('refreshToken', refreshToken, {
-        path: '/', // all paths of backend can access the token
-        secure: true, // use https system
-        sameSite: true, // only in this site
-        httpOnly: true, // only backend can access, frontend can not.
-      })
-      .status(200)
-      .send({
-        token,
-      })
+    // return reply
+    //   .setCookie('refreshToken', refreshToken, {
+    //     path: '/', // all paths of backend can access the token
+    //     secure: true, // use https system
+    //     sameSite: true, // only in this site
+    //     httpOnly: true, // only backend can access, frontend can not.
+    //   })
+    //   .status(200)
+    //   .send({
+    //     token,
+    //   })
   } catch (err) {
     return reply.status(500).send(err)
   }

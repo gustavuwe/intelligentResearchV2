@@ -2,8 +2,9 @@ import { FastifyInstance } from 'fastify'
 import { signIn } from './modules/auth/controllers/sign-in'
 import { signUp } from './modules/auth/controllers/sign-up'
 import { register } from './modules/research/controllers/register'
-import { verifyJWT } from './middlewares/verify-jwt'
 import { update } from './modules/research/controllers/update'
+import { deleteResearch } from './modules/research/controllers/delete'
+import { fetchResearches } from './modules/research/controllers/fetch'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
@@ -11,6 +12,9 @@ export const registerRoutes = async (app: FastifyInstance) => {
   app.post('/auth/sign-up', signUp)
 
   // research
-  app.post('/research/register', { onRequest: [verifyJWT] }, register)
-  app.put('/research/update', { onRequest: [verifyJWT] }, update)
+  app.post('/research/register', register)
+  // app.put('/research/update', { onRequest: [verifyJWT] }, update)
+  app.put('/research/update', update)
+  app.delete('/research/delete', deleteResearch)
+  app.get('/research', fetchResearches)
 }
