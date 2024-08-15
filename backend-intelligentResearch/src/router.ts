@@ -5,6 +5,7 @@ import { register } from './modules/research/controllers/register'
 import { update } from './modules/research/controllers/update'
 import { deleteResearch } from './modules/research/controllers/delete'
 import { fetchResearches } from './modules/research/controllers/fetch'
+import { registerVoter } from './modules/voter/controllers/register'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
@@ -13,8 +14,10 @@ export const registerRoutes = async (app: FastifyInstance) => {
 
   // research
   app.post('/research/register', register)
-  // app.put('/research/update', { onRequest: [verifyJWT] }, update)
   app.put('/research/update', update)
   app.delete('/research/delete', deleteResearch)
   app.get('/research', fetchResearches)
+
+  // voter
+  app.post('/voter/register', registerVoter)
 }
