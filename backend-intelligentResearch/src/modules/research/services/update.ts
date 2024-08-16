@@ -13,6 +13,36 @@ export const update = async (data: UpdateResearchSchema) => {
     throw new Error('Research not found') // TODO: refactor this error with a better practice
   }
 
+  // await prisma.research.updateMany({
+  //   where: {
+  //     id: data.id
+  //   },
+
+  //   data: {
+  //     title: data.title,
+  //     startDate: data.startDate,
+  //     endDate: data.endDate,
+  //     candidates: {
+  //       create: data.candidates?.map((candidate) => ({
+  //         id: candidate.id,
+  //         name: candidate.name,
+  //         imgUrl: candidate.imgUrl,
+  //         votes: candidate.votes,
+  //       })),
+  //     },
+  //     Vote: {
+  //       create: data.Vote?.map((vote) => ({
+  //         id: vote.id,
+  //         voterId: vote.voterId,
+  //         candidateId: vote.candidateId,
+  //         researchId: vote.researchId,
+  //       })),
+  //     },
+  //   }
+
+  // }),
+  // })
+
   await prisma.research.update({
     where: {
       id: data.id,
@@ -27,7 +57,7 @@ export const update = async (data: UpdateResearchSchema) => {
   if (data.candidates) {
     await prisma.candidate.updateMany({
       where: {
-        researchId: research.id,
+        researchId: data.id,
       },
       data: data.candidates,
     })
