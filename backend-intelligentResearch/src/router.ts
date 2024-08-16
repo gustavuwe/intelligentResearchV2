@@ -7,6 +7,7 @@ import { deleteResearch } from './modules/research/controllers/delete'
 import { fetchResearches } from './modules/research/controllers/fetch'
 import { registerVoter } from './modules/voter/controllers/register'
 import { registerVote } from './modules/vote/controllers/register'
+import { registerCandidate } from './modules/candidate/controllers/register'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
@@ -18,6 +19,9 @@ export const registerRoutes = async (app: FastifyInstance) => {
   app.put('/research/update', update)
   app.delete('/research/delete', deleteResearch)
   app.get('/research', fetchResearches)
+
+  // candidate
+  app.post('/candidate/register', registerCandidate)
 
   // voter
   app.post('/voter/register', registerVoter)
