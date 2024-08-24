@@ -15,11 +15,13 @@ import { findByName } from './modules/voter/controllers/findByName'
 import { findCandidateByName } from './modules/candidate/controllers/findCandidateByName'
 import { updateVoter } from './modules/voter/controllers/update'
 import { verifyAdmin } from './modules/auth/controllers/verify-admin'
+import { logout } from './modules/auth/controllers/logout'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
   app.post('/auth/sign-in', signIn)
   app.post('/auth/sign-up', signUp)
+  app.post('/auth/logout', logout)
 
   // verify token
   app.get('/auth/verify', verify)

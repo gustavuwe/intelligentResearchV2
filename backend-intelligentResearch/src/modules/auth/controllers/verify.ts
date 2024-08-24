@@ -6,6 +6,8 @@ export interface JwtPayload {
   sub: string
 }
 
+export const blacklist: Set<string> = new Set()
+
 export const verify = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     // const token = request.cookies.token

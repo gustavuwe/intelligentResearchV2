@@ -250,7 +250,7 @@ export default function HomePage() {
     };
 
     getResearches();
-  }, [refresh]);
+  }, [refresh, refreshVoters, refreshCandidates]);
 
   useEffect(() => {
     async function getRegisteredCandidates() {
@@ -265,7 +265,7 @@ export default function HomePage() {
       }
     }
     getRegisteredCandidates();
-  }, [refreshCandidates]);
+  }, [refreshCandidates, refreshVoters, refresh]);
 
   useEffect(() => {
     async function getRegisteredVoters() {
@@ -280,7 +280,7 @@ export default function HomePage() {
       }
     }
     getRegisteredVoters();
-  }, [refreshVoters]);
+  }, [refreshVoters, refreshCandidates, refresh]);
 
   if (isLoading) {
     return <Loading />;
@@ -397,9 +397,6 @@ export default function HomePage() {
   };
 
   const handleAddCandidate = async () => {
-    console.log("chegou aqui");
-    console.log(activeResearch);
-    console.log(researches[activeResearch]);
     if (candidateSearch) {
       try {
         if (activeResearch !== null) {
@@ -432,6 +429,7 @@ export default function HomePage() {
   };
 
   const handleAddVoter = async () => {
+    setRefreshVoters((prev) => !prev);
     console.log(selectedCandidate);
     if (selectedCandidate !== null && activeResearch !== null) {
       try {
@@ -564,6 +562,24 @@ export default function HomePage() {
     setActiveResearch(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('http://localhost:3333/auth/logout', {}, {
+        withCredentials: true,
+      })
+
+      console.log(response);
+
+      if (response.status === 200) {
+        router.push('/login');
+      } else {
+        console.error('Failed to logout');
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto">
@@ -585,11 +601,9 @@ export default function HomePage() {
                   Reportar erro
                 </Link>
               </Button>
-              <Button variant="ghost" className="text-red-500">
-                <Link href="#" className="flex justify-between">
+              <Button onClick={async () => await handleLogout()} variant="ghost" className="text-red-500">
                   <TrashIcon color="red" className="h-4 w-4 mr-2" />
                   Fazer Logout
-                </Link>
               </Button>
             </ul>
           </nav>
@@ -624,7 +638,7 @@ export default function HomePage() {
                     </Button>
                   </SheetClose>
                   <SheetClose asChild>
-                    <Button className="gap-2 justify-start text-red-500" variant="ghost">
+                    <Button onClick={handleLogout} className="gap-2 justify-start text-red-500" variant="ghost">
                       <LogOutIcon color="red" size={18} /> Fazer Logout
                     </Button>
                   </SheetClose>
