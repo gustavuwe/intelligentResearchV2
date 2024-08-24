@@ -28,6 +28,7 @@ Table Voter {
   phoneNumber String
   lat String [not null]
   long String [not null]
+  neighborhood String
   Candidate Candidate [not null]
   candidateId String [not null]
   createdAt DateTime [default: `now()`, not null]

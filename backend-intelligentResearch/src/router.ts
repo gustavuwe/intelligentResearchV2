@@ -8,11 +8,22 @@ import { fetchResearches } from './modules/research/controllers/fetch'
 import { registerVoter } from './modules/voter/controllers/register'
 import { registerVote } from './modules/vote/controllers/register'
 import { registerCandidate } from './modules/candidate/controllers/register'
+import { verify } from './modules/auth/controllers/verify'
+import { fetchCandidates } from './modules/candidate/controllers/fetch'
+import { fetchVoters } from './modules/voter/controllers/fetch'
+import { findByName } from './modules/voter/controllers/findByName'
+import { findCandidateByName } from './modules/candidate/controllers/findCandidateByName'
+import { updateVoter } from './modules/voter/controllers/update'
+import { verifyAdmin } from './modules/auth/controllers/verify-admin'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
   app.post('/auth/sign-in', signIn)
   app.post('/auth/sign-up', signUp)
+
+  // verify token
+  app.get('/auth/verify', verify)
+  app.get('/auth/verify-admin', verifyAdmin)
 
   // research
   app.post('/research/register', register)
@@ -22,9 +33,14 @@ export const registerRoutes = async (app: FastifyInstance) => {
 
   // candidate
   app.post('/candidate/register', registerCandidate)
+  app.get('/candidate', fetchCandidates)
+  app.get('/candidate/findByName', findCandidateByName)
 
   // voter
   app.post('/voter/register', registerVoter)
+  app.get('/voter', fetchVoters)
+  app.get('/voter/findByName', findByName)
+  app.patch('/voter/update/:id', updateVoter)
 
   // vote
   app.post('/vote/register', registerVote)

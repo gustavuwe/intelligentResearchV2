@@ -4,6 +4,7 @@ import { ZodError } from 'zod'
 import { env } from './env'
 import { registerRoutes } from '../router'
 import fastifyCookie from '@fastify/cookie'
+import cors from '@fastify/cors'
 
 export const app = Fastify()
 
@@ -21,8 +22,14 @@ export const app = Fastify()
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
-app.register(fastifyCookie)
+app.register(fastifyCookie, {
+  secret: env.JWT_SECRET,
+})
 app.register(registerRoutes)
+app.register(cors, {
+  origin: env.CORS_ORIGIN,
+  credentials: true,
+})
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

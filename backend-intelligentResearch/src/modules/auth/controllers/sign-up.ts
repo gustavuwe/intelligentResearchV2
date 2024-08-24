@@ -25,16 +25,16 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
     //   String(env.JWT_SECRET),
     // )
 
-    // reply
-    //   .setCookie('token', token, {
-    //     path: '/',
-    //     httpOnly: true,
-    //   })
-    //   .send({
-    //     id: user.id,
-    //     username: user.username,
-    //     role: user.role,
-    //   })
+    reply
+      .setCookie('token', token, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      })
+      .send({
+        sub: user.id,
+      })
 
     return reply.status(200).send({ token })
   } catch (err) {

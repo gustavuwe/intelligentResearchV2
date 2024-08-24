@@ -24,7 +24,18 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
       },
     )
 
-    return reply.status(200).send({ token })
+    reply
+      .setCookie('token', token, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      })
+      .send({
+        sub: user.id,
+      })
+
+    return reply.status(200).send()
 
     // const token = request.server.jwt.sign(
     //   { id: user.id, username: user.username },
