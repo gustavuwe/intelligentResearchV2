@@ -122,6 +122,7 @@ export interface Voter {
   phoneNumber?: string;
   lat: string;
   long: string;
+  neighborhood: string;
   candidateId: string;
   createdAt: string;
   updatedAt: string;
@@ -193,6 +194,8 @@ export default function HomePage() {
           withCredentials: true,
         });
 
+        console.log(response)
+
         if (response.status !== 200) {
           router.push("/login");
         } else {
@@ -224,6 +227,7 @@ export default function HomePage() {
         }
       } catch (err) {
         console.error("Token verification failed:", err);
+        setIsAdmin(false);
       }
     };
 

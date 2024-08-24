@@ -121,7 +121,7 @@
 // }
 "use client";
 
-import { useEffect, useState } from "react";
+import { cache, useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
@@ -141,11 +141,16 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import axios from "axios";
-import { Candidate } from "@/app/home/page";
+import { Candidate, Voter } from "@/app/home/page";
+
+interface Idata {
+  neighborhood: string;
+  votes: number;
+}
 
 interface CandidateData {
   name: string;
-  data: any[];
+  data: Idata[];
 }
 
 // Mock data for candidates and their vote percentages across neighborhoods
@@ -190,6 +195,8 @@ const candidatesData = [
 
 const candidatesData2: CandidateData[] = []
 
+const geralData: CandidateData[] = []
+
 const chartConfig = {
   desktop: {
     label: "Votes",
@@ -198,23 +205,87 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Component() {
-  const [selectedCandidate, setSelectedCandidate] = useState(candidatesData[0]);
 
   useEffect(() => {
-    const getCandidates = async () => {
-      const response = await axios.get("http://localhost:3000/api/candidates");
+    console.log(candidatesData2)
+    const getCandidates = async (): Promise<void> => {
+      const response = await axios.get("http://localhost:3333/candidate");
 
       if (response.status === 200) {
-        response.data.candidates.map((candidate: Candidate) => {
-          candidatesData2.push(candidate.name);
+        await response.data.candidates.map((candidate: Candidate) => {
+          candidatesData2.push({ name: candidate.name,  data: [] });
+
+          candidate.Voters.map((voter: Voter) => {
+            const voterNeighborhood = voter.neighborhood
+
+            const neighborhoodData = candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.find(d => d.neighborhood === voterNeighborhood);
+
+            if (neighborhoodData) {
+              candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data[candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.findIndex(d => d.neighborhood === voterNeighborhood)].votes += 1;
+            } else {
+              candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.push({ neighborhood: voterNeighborhood, votes: 0 });
+            }
+          });
         })
       }
     }
+  }, [])
 
-    getCandidates();
+  const getCandidates = async (): Promise<void> => {
+    const response = await axios.get("http://localhost:3333/candidate");
 
+    if (response.status === 200) {
+      await response.data.candidates.map((candidate: Candidate) => {
+        candidatesData2.push({ name: candidate.name,  data: [] });
+
+        candidate.Voters.map((voter: Voter) => {
+          const voterNeighborhood = voter.neighborhood
+
+          const neighborhoodData = candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.find(d => d.neighborhood === voterNeighborhood);
+
+          if (neighborhoodData) {
+            candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data[candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.findIndex(d => d.neighborhood === voterNeighborhood)].votes += 1;
+          } else {
+            candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.push({ neighborhood: voterNeighborhood, votes: 0 });
+          }
+        });
+      })
+    }
+  }
+
+  getCandidates();
+
+  const getGeralData = async (): Promise<void> => {
+    function sumVotes(candidateName: string): number {
+      // Encontra o candidato com o nome fornecido
+      const candidate = candidatesData2.find(c => c.name === candidateName);
     
-  })
+      if (!candidate) {
+        console.log(`Candidato com o nome ${candidateName} não encontrado.`);
+        return 0;
+      }
+    
+      // Soma todos os votos no array `data` do candidato
+      const totalVotes = candidate.data.reduce((total, item) => total + item.votes, 0);
+    
+      return totalVotes;
+    }
+
+    geralData.push({ name: "todos os candidatos", data: [] });
+
+    candidatesData2.map((candidate: CandidateData) => {
+      const candidateAllVotes = { neighborhood: candidate.name, votes: sumVotes(candidate.name) };
+      geralData[0].data.push(candidateAllVotes);
+    })
+  }
+
+  const [selectedCandidate, setSelectedCandidate] = useState({});
+
+  getGeralData().then(() => {
+    setSelectedCandidate(geralData[0]);
+  });
+
+
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-background">
@@ -223,7 +294,7 @@ export default function Component() {
         <div className="p-4">
           <h2 className="text-lg font-semibold mb-4">Candidatos</h2>
           <div className="space-y-2">
-            {candidatesData.map((candidate) => (
+            {candidatesData2.map((candidate) => (
               <Button
                 key={candidate.name}
                 variant={
@@ -252,7 +323,7 @@ export default function Component() {
               <SheetTitle>Candidatos</SheetTitle>
             </SheetHeader>
             <div className="space-y-2">
-              {candidatesData.map((candidate) => (
+              {candidatesData2.map((candidate) => (
                 <Button
                   key={candidate.name}
                   variant={
