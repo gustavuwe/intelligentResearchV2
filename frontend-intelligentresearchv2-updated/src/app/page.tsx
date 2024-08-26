@@ -7,10 +7,11 @@ import { MapPin, Clock, Search, Zap, BarChart, Users, ChevronRight, Menu, MenuIc
 import Link from 'next/link'
 import Image from 'next/image'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import 'dotenv/config'
 
 export default function Component() {
   const [email, setEmail] = useState('')
-  const [scrollPosition, setScrollPosition] = useState(0)
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +19,7 @@ export default function Component() {
     }
 
     window.addEventListener('scroll', handleScroll)
+    console.log(process.env.NEXT_PUBLIC_API_URL)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 

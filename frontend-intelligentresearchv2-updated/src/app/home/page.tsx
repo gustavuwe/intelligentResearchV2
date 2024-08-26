@@ -89,7 +89,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Link from "next/link";
+import Link from "next/link"; 
 
 // Mock data for existing researches
 // const initialResearches = [
@@ -191,7 +191,7 @@ export default function HomePage() {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/auth/verify", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
           withCredentials: true,
         });
 
@@ -215,7 +215,7 @@ export default function HomePage() {
     const verifyTokenAdmin = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/auth/verify-admin",
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-admin`,
           {
             withCredentials: true,
           }
@@ -238,7 +238,7 @@ export default function HomePage() {
   useEffect(() => {
     const getResearches = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/research", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/research`, {
           withCredentials: true,
         });
 
@@ -255,7 +255,7 @@ export default function HomePage() {
 
   useEffect(() => {
     async function getRegisteredCandidates() {
-      const response = await axios.get("http://localhost:3333/candidate", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/candidate`, {
         withCredentials: true,
       });
 
@@ -270,7 +270,7 @@ export default function HomePage() {
 
   useEffect(() => {
     async function getRegisteredVoters() {
-      const response = await axios.get("http://localhost:3333/voter", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/voter`, {
         withCredentials: true,
       });
 
@@ -295,7 +295,7 @@ export default function HomePage() {
 
     try {
       const registerResearch = await axios.post(
-        "http://localhost:3333/research/register",
+        `${process.env.NEXT_PUBLIC_API_URL}/research/register`,
         {
           title: newResearch.title,
           startDate: getCurrentDate(),
@@ -408,7 +408,7 @@ export default function HomePage() {
       try {
         if (activeResearch !== null) {
           const response = await axios.post(
-            "http://localhost:3333/candidate/register",
+            `${process.env.NEXT_PUBLIC_API_URL}/candidate/register`,
             {
               name: candidateSearch,
               imgUrl: "",
@@ -447,7 +447,7 @@ export default function HomePage() {
     if (selectedCandidate !== null && activeResearch !== null && !newErrors.nome) {
       try {
         const response = await axios.post(
-          "http://localhost:3333/voter/register",
+          `${process.env.NEXT_PUBLIC_API_URL}/voter/register`,
           {
             name: voterName,
             phoneNumber: voterPhoneNumber,
@@ -501,7 +501,7 @@ export default function HomePage() {
   const handleSendVote = async () => {
     // TODO: send vote to server
     const getVoterId = await axios.get(
-      "http://localhost:3333/voter/findByName",
+      `${process.env.NEXT_PUBLIC_API_URL}/voter/findByName`,
       {
         params: {
           name: selectedVoter,
@@ -518,7 +518,7 @@ export default function HomePage() {
     }
 
     const getCandidateId = await axios.get(
-      "http://localhost:3333/candidate/findByName",
+      `${process.env.NEXT_PUBLIC_API_URL}/candidate/findByName`,
       {
         params: {
           name: selectedCandidate,
@@ -533,7 +533,7 @@ export default function HomePage() {
       selectedVoter !== null
     ) {
       const response = await axios.post(
-        "http://localhost:3333/vote/register",
+        `${process.env.NEXT_PUBLIC_API_URL}/vote/register`,
         {
           voterId: getVoterId.data.voters[0].id,
           candidateId: getCandidateId.data.candidate[0].id,
@@ -550,7 +550,7 @@ export default function HomePage() {
       if (response.status === 201) {
         console.log(getVoterId.data.voters[0].id);
         const updateVoterLoc = await axios.patch(
-          `http://localhost:3333/voter/update/${getVoterId.data.voters[0].id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/voter/update/${getVoterId.data.voters[0].id}`,
           {
             lat: latitude !== null ? latitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
             long: longitude !== null ? longitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
@@ -577,7 +577,7 @@ export default function HomePage() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('http://localhost:3333/auth/logout', {}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {}, {
         withCredentials: true,
       })
 

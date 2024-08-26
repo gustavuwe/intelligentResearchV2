@@ -218,7 +218,7 @@ export default function Component() {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/auth/verify", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
           withCredentials: true,
         });
 
@@ -242,7 +242,7 @@ export default function Component() {
     const verifyTokenAdmin = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/auth/verify-admin",
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-admin`,
           {
             withCredentials: true,
           }
@@ -396,7 +396,7 @@ export default function Component() {
     const fetchData = async () => {
       const researchId = params?.id;
       try {
-        const response = await axios.get(`http://localhost:3333/candidate/findByResearchId/${researchId}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/candidate/findByResearchId/${researchId}`, {
           withCredentials: true,
         });
 

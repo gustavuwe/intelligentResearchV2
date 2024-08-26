@@ -16,7 +16,7 @@ const GetInTouch = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/auth/verify", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
           withCredentials: true,
         });
 

@@ -18,7 +18,7 @@ const LoginPage = () => {
         try {
             const json = JSON.stringify({ username, password });
 
-            const response = await axios.post("http://localhost:3333/auth/sign-in", json, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`, json, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
