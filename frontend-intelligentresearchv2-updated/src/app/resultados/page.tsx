@@ -18,6 +18,7 @@ import {
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Research } from "../home/page";
 
 const researchCards = [
   {
@@ -36,8 +37,8 @@ const researchCards = [
 
 export default function Component() {
   const router = useRouter();
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [researches, setResearches] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(0);
+  const [researches, setResearches] = useState<Research[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -122,8 +123,7 @@ export default function Component() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <span>{card.title}</span>
-                  </CardTitle>
-                  <CardDescription>{card.description}</CardDescription>
+                  </CardTitle> 
                 </CardHeader>
                 <CardContent>
                   <div className="h-32 bg-muted rounded-md flex items-center justify-center">
