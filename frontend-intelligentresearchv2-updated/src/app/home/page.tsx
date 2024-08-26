@@ -186,6 +186,7 @@ export default function HomePage() {
   const [refreshVoters, setRefreshVoters] = useState(false);
   const [voterName, setVoterName] = useState("");
   const [voterPhoneNumber, setVoterPhoneNumber] = useState("");
+  const [errors, setErrors] = useState<{ nome?: string, contato?: string }>({});
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -397,7 +398,13 @@ export default function HomePage() {
   };
 
   const handleAddCandidate = async () => {
-    if (candidateSearch) {
+    const newErrors2: { nome?: string } = {};
+
+    if (!candidateSearch) newErrors2.nome = "Selecione um candidato para adicionar";
+
+    setErrors(newErrors2);
+
+    if (candidateSearch && !newErrors2.nome) {
       try {
         if (activeResearch !== null) {
           const response = await axios.post(
@@ -429,9 +436,15 @@ export default function HomePage() {
   };
 
   const handleAddVoter = async () => {
+    const newErrors: { nome?: string } = {};
+
     setRefreshVoters((prev) => !prev);
     console.log(selectedCandidate);
-    if (selectedCandidate !== null && activeResearch !== null) {
+    if (!selectedCandidate) newErrors.nome = "Insira o nome do votante";
+
+    setErrors(newErrors);
+
+    if (selectedCandidate !== null && activeResearch !== null && !newErrors.nome) {
       try {
         const response = await axios.post(
           "http://localhost:3333/voter/register",
@@ -596,7 +609,7 @@ export default function HomePage() {
                 </Button>
               )}
               <Button variant="outline">
-                <Link href="#" className="flex justify-between">
+                <Link href="/reportar" className="flex justify-between">
                   <MegaphoneIcon className="h-4 w-4 mr-2" />
                   Reportar erro
                 </Link>
@@ -632,7 +645,7 @@ export default function HomePage() {
                   </SheetClose>
                   <SheetClose asChild>
                     <Button className="gap-2 justify-start" variant="outline">
-                      <Link href="#" className="flex flex-row gap-2">
+                      <Link href="/reportar" className="flex flex-row gap-2">
                         <MegaphoneIcon size={18} /> Reportar um erro
                       </Link>
                     </Button>
@@ -778,6 +791,7 @@ export default function HomePage() {
                 value={candidateSearch}
                 onChange={handleCandidateSearch}
               />
+              {errors.nome && <p className="text-red-500">{errors.nome}</p>}
               {candidateSearch && (
                 <ScrollArea className="h-[100px] border rounded-md p-2">
                   {filteredCandidates.map((candidate, index) => (
@@ -863,6 +877,7 @@ export default function HomePage() {
                           value={voterName}
                           onChange={(e) => setVoterName(e.target.value)}
                         />
+                        {errors.nome && <p className="text-sm text-red-500 w-[200px]">{errors.nome}</p>}
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="phonenumber">Número para contato</Label>
@@ -897,7 +912,7 @@ export default function HomePage() {
   );
 }
 
-const Loading = () => {
+export const Loading = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>

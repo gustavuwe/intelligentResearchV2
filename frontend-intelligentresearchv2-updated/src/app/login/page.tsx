@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useState } from "react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
     const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [userError, setUserError] = useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -34,6 +34,7 @@ const LoginPage = () => {
             }
         } catch (err) {
             console.error(err);
+            setUserError("Usuário ou senha inválidos");
         }
     };
 
@@ -58,6 +59,7 @@ const LoginPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    {userError && <p className="text-red-500">{userError}</p>}
                     <Button
                         type="submit"
                         className="w-[calc(100%-20%)] max-w-[400px] mt-4"

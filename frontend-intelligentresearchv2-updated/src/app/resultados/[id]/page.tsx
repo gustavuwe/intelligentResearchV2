@@ -142,6 +142,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Menu } from "lucide-react";
 import axios from "axios";
 import { Candidate, Voter } from "@/app/home/page";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 interface Idata {
   neighborhood: string;
@@ -201,72 +203,256 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Component() {
-
+  const router = useRouter();
+  const params = useParams();
   // const candidatesData2: CandidateData[] = []
 
   // const geralData: CandidateData[] = []
 
   const [candidatesData2, setCandidatesData] = useState<CandidateData[]>([]);
   const [geralData, setGeralData] = useState<CandidateData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCandidate, setSelectedCandidate] = useState<CandidateData | null>({ name: "todos os candidatos", data: [] });
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const getCandidates = async (): Promise<void> => {
-      const response = await axios.get("http://localhost:3333/candidate");
+    const verifyToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:3333/auth/verify", {
+          withCredentials: true,
+        });
 
-      if (response.status === 200) {
-        await response.data.candidates.map((candidate: Candidate) => {
-          candidatesData2.push({ name: candidate.name,  data: [] });
+        console.log(response)
 
-          candidate.Voters.map((voter: Voter) => {
-            const voterNeighborhood = voter.neighborhood
-
-            const neighborhoodData = candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.find(d => d.neighborhood === voterNeighborhood);
-
-            if (neighborhoodData) {
-              candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data[candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.findIndex(d => d.neighborhood === voterNeighborhood)].votes += 1;
-            } else {
-              candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.push({ neighborhood: voterNeighborhood, votes: 0 });
-            }
-          });
-        })
-      }
-    }
-
-    getCandidates()
-
-    const getGeralData = async (): Promise<void> => {
-      function sumVotes(candidateName: string): number {
-        // Encontra o candidato com o nome fornecido
-        const candidate = candidatesData2.find(c => c.name === candidateName);
-      
-        if (!candidate) {
-          console.log(`Candidato com o nome ${candidateName} não encontrado.`);
-          return 0;
+        if (response.status !== 200) {
+          router.push("/login");
+        } else {
+          setIsLoading(false);
         }
-      
-        // Soma todos os votos no array `data` do candidato
-        const totalVotes = candidate.data.reduce((total, item) => total + item.votes, 0);
-      
-        return totalVotes;
+      } catch (err) {
+        console.error("Token verification failed:", err);
+        router.push("/login");
       }
+    };
+
+    verifyToken();
+  }, [router]);
+
+  useEffect(() => {
+    const verifyTokenAdmin = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3333/auth/verify-admin",
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status !== 200) {
+          setIsAdmin(false);
+          router.push("/login");
+        } else {
+          setIsAdmin(true);
+        }
+      } catch (err) {
+        console.error("Token verification failed:", err);
+        setIsAdmin(false);
+        router.push("/login");
+      }
+    };
+
+    verifyTokenAdmin();
+  }, [isAdmin, router]);
+
+  // useEffect(() => {
+  //   try {
+  //     const getCandidates = async (): Promise<void> => {
+  //       const response = await axios.get("http://localhost:3333/candidate");
   
-      geralData.push({ name: "todos os candidatos", data: [] });
+  //       if (response.status === 200) {
+  //         await response.data.candidates.map((candidate: Candidate) => {
+  //           candidatesData2.push({ name: candidate.name,  data: [] });
   
-      candidatesData2.map((candidate: CandidateData) => {
-        const candidateAllVotes = { neighborhood: candidate.name, votes: sumVotes(candidate.name) };
-        geralData[0].data.push(candidateAllVotes);
-      })
+  //           candidate.Voters.map((voter: Voter) => {
+  //             const voterNeighborhood = voter.neighborhood
+  
+  //             const neighborhoodData = candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.find(d => d.neighborhood === voterNeighborhood);
+  
+  //             if (neighborhoodData) {
+  //               candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data[candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.findIndex(d => d.neighborhood === voterNeighborhood)].votes += 1;
+  //             } else {
+  //               candidatesData2[candidatesData2.findIndex(candidate => candidate.name === candidate.name)].data.push({ neighborhood: voterNeighborhood, votes: 0 });
+  //             }
+  //           });
+  //         })
+  //       }
+  //     }
+  
+  //     getCandidates()
+  
+  //     const getGeralData = async (): Promise<void> => {
+  //       function sumVotes(candidateName: string): number {
+  //         // Encontra o candidato com o nome fornecido
+  //         const candidate = candidatesData2.find(c => c.name === candidateName);
+        
+  //         if (!candidate) {
+  //           console.log(`Candidato com o nome ${candidateName} não encontrado.`);
+  //           return 0;
+  //         }
+        
+  //         // Soma todos os votos no array `data` do candidato
+  //         const totalVotes = candidate.data.reduce((total, item) => total + item.votes, 0);
+        
+  //         return totalVotes;
+  //       }
+    
+  //       geralData.push({ name: "todos os candidatos", data: [] });
+    
+  //       candidatesData2.map((candidate: CandidateData) => {
+  //         const candidateAllVotes = { neighborhood: candidate.name, votes: sumVotes(candidate.name) };
+  //         geralData[0].data.push(candidateAllVotes);
+  //       })
+  //     }
+  
+  //     getGeralData()
+  //     setSelectedCandidate(geralData[0]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+
+  // }, [candidatesData2, geralData]);
+
+  // useEffect(() => {
+  //   try {
+  //     const getCandidates = async (): Promise<void> => {
+  //       const response = await axios.get("http://localhost:3333/candidate");
+  
+  //       if (response.status === 200) {
+  //         const data: CandidateData[] = [];
+  //         await response.data.candidates.map((candidate: Candidate) => {
+            
+  //           data.push({ name: candidate.name,  data: [] });
+  
+  //           candidate.Voters.map((voter: Voter) => {
+  //             const voterNeighborhood = voter.neighborhood
+  
+  //             const neighborhoodData = data[data.findIndex(data => data.name === candidate.name)].data.find(d => d.neighborhood === voterNeighborhood);
+  
+  //             if (neighborhoodData) {
+  //               data[data.findIndex(candidate => candidate.name === candidate.name)].data[data[data.findIndex(candidate => candidate.name === candidate.name)].data.findIndex(d => d.neighborhood === voterNeighborhood)].votes += 1;
+  //             } else {
+  //               data[data.findIndex(candidate => candidate.name === candidate.name)].data.push({ neighborhood: voterNeighborhood, votes: 0 });
+  //             }
+  //           });
+  //         })
+  //         setCandidatesData(data);
+  //       }
+  //     }
+  
+  //     getCandidates()
+  
+  //     const getGeralData = async (): Promise<void> => {
+  //       function sumVotes(candidateName: string): number {
+  //         // Encontra o candidato com o nome fornecido
+  //         const candidate = candidatesData2.find(c => c.name === candidateName);
+        
+  //         if (!candidate) {
+  //           console.log(`Candidato com o nome ${candidateName} não encontrado.`);
+  //           return 0;
+  //         }
+        
+  //         // Soma todos os votos no array `data` do candidato
+  //         const totalVotes = candidate.data.reduce((total, item) => total + item.votes, 0);
+        
+  //         return totalVotes;
+  //       }
+
+  //       const geralDataVariable: CandidateData[] = [];
+    
+  //       geralDataVariable.push({ name: "todos os candidatos", data: [] });
+    
+  //       candidatesData2.map((candidate: CandidateData) => {
+  //         const candidateAllVotes = { neighborhood: candidate.name, votes: sumVotes(candidate.name) };
+  //         geralDataVariable[0].data.push(candidateAllVotes);
+  //       })
+
+  //       setGeralData(geralDataVariable);
+  //     }
+  
+  //     getGeralData()
+  //     setSelectedCandidate(geralData[0]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //     console.log(geralData[0])
+  //   }
+
+  // }, [candidatesData2, geralData]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const researchId = params?.id;
+      try {
+        const response = await axios.get(`http://localhost:3333/candidate/findByResearchId/${researchId}`, {
+          withCredentials: true,
+        });
+
+        console.log(response)
+  
+        if (response.status === 200) {
+          const data: CandidateData[] = [];
+          response.data.candidates.forEach((candidate: any) => {
+            const candidateData: CandidateData = { name: candidate.name, data: [] };
+  
+            candidate.Voters.forEach((voter: any) => {
+              const neighborhoodData = candidateData.data.find(d => d.neighborhood === voter.neighborhood);
+  
+              if (neighborhoodData) {
+                neighborhoodData.votes += 1;
+              } else {
+                candidateData.data.push({ neighborhood: voter.neighborhood, votes: 1 });
+              }
+            });
+  
+            data.push(candidateData);
+          });
+  
+          setCandidatesData(data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params]);
+
+  useEffect(() => {
+    if (candidatesData2.length > 0) {
+      const geralDataVariable: CandidateData[] = [{ name: "todos os candidatos", data: [] }];
+
+      candidatesData2.forEach((candidate) => {
+        const totalVotes = candidate.data.reduce((sum, item) => sum + item.votes, 0);
+        geralDataVariable[0].data.push({ neighborhood: candidate.name, votes: totalVotes });
+      });
+
+      setGeralData(geralDataVariable);
+      setSelectedCandidate(geralDataVariable[0]);
     }
+  }, [candidatesData2]);
 
-    getGeralData().then(() => {
-      setIsLoading(true);
-    });
-  }, [candidatesData2, geralData]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(geralData[0]);
 
-  if (isLoading == true) {
+  if (isLoading || isAdmin !== true) {
     return <Loading />;
+  }
+
+  if (!selectedCandidate) {
+    return <p>Erro ao carregar os dados</p>;
   }
 
   return (

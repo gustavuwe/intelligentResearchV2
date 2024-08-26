@@ -16,6 +16,7 @@ import { findCandidateByName } from './modules/candidate/controllers/findCandida
 import { updateVoter } from './modules/voter/controllers/update'
 import { verifyAdmin } from './modules/auth/controllers/verify-admin'
 import { logout } from './modules/auth/controllers/logout'
+import { findByResearchId } from './modules/candidate/controllers/findById'
 
 export const registerRoutes = async (app: FastifyInstance) => {
   // auth
@@ -37,6 +38,7 @@ export const registerRoutes = async (app: FastifyInstance) => {
   app.post('/candidate/register', registerCandidate)
   app.get('/candidate', fetchCandidates)
   app.get('/candidate/findByName', findCandidateByName)
+  app.get('/candidate/findByResearchId/:id', findByResearchId)
 
   // voter
   app.post('/voter/register', registerVoter)

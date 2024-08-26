@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const researchCards = [
   {
@@ -34,8 +35,60 @@ const researchCards = [
 ];
 
 export default function Component() {
+  const router = useRouter();
   const [selectedCard, setSelectedCard] = useState(null);
   const [researches, setResearches] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:3333/auth/verify", {
+          withCredentials: true,
+        });
+
+        console.log(response)
+
+        if (response.status !== 200) {
+          router.push("/login");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error("Token verification failed:", err);
+        router.push("/login");
+      }
+    };
+
+    verifyToken();
+  }, [router]);
+
+  useEffect(() => {
+    const verifyTokenAdmin = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3333/auth/verify-admin",
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status !== 200) {
+          setIsAdmin(false);
+          router.push("/login");
+        } else {
+          setIsAdmin(true);
+        }
+      } catch (err) {
+        console.error("Token verification failed:", err);
+        setIsAdmin(false);
+        router.push("/login");
+      }
+    };
+
+    verifyTokenAdmin();
+  }, [isAdmin, router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +97,10 @@ export default function Component() {
     };
     fetchData();
   });
+
+  if (isLoading || isAdmin !== true) {
+    return <Loading />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -91,3 +148,11 @@ export default function Component() {
     </div>
   );
 }
+
+const Loading = () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+};
