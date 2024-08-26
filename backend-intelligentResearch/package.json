@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start:dev": "tsx watch src/index.ts",
-    "start": "node build/index.js",
+    "start": "node build/index.cjs",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
