@@ -455,7 +455,7 @@ export default function HomePage() {
             long: "", // TODO: get lat and long from map
             candidateId: researches[activeResearch].candidates.find(
               (candidate: Candidate) => candidate.name === selectedCandidate
-            ).id,
+            )?.id,
             Vote: [],
           },
           {
