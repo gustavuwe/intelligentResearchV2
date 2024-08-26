@@ -26,10 +26,7 @@ app.register(fastifyCookie, {
   secret: env.JWT_SECRET,
 })
 app.register(registerRoutes)
-app.register(cors, {
-  origin: env.CORS_ORIGIN,
-  credentials: true,
-})
+app.register(cors, { origin: true })
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
