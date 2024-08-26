@@ -40,7 +40,7 @@ const LoginPage = () => {
 
     return ( 
         <main>
-            <div className="flex flex-col items-center justify-center max-w-[100%] min-h-[calc(100vh-100px)] gap-4">
+            {/* <div className="flex flex-col items-center justify-center max-w-[100%] min-h-[calc(100vh-100px)] gap-4">
                 <h1 className="text-3xl font-bold text-center">Fazer Login</h1>
                 <form className="mt-4 flex flex-col items-center justify-center gap-2" onSubmit={handleSubmit}>
                     <Input
@@ -67,10 +67,37 @@ const LoginPage = () => {
                         Login
                     </Button>
                 </form>
-                {/* <Input type="text" className="mt-5 w-[calc(100%-20%)] max-w-[400px] border-black" onChange={(e) => setEmail(e.target.value)} />
-                <Input type="password" className="w-[calc(100%-20%)] max-w-[400px]  border-black" onChange={(e) => setPassword(e.target.value)} />
-                <Button type="submit" className="w-[calc(100%-20%)] max-w-[400px]" onClick={() => handleSubmit}>Login</Button> */}
-            </div>
+            </div> */}
+            <div className="flex items-center justify-center min-h-[calc(100vh-100px)] px-4">
+    <div className="flex flex-col items-center justify-center w-full max-w-md gap-4 p-6 bg-white rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-center">Fazer Login</h1>
+        <form className="w-full flex flex-col items-center justify-center gap-4" onSubmit={handleSubmit}>
+            <Input
+                type="text"
+                placeholder="Usuário"
+                className="w-full border-black"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+            />
+            <Input
+                type="password"
+                placeholder="Senha"
+                className="w-full border-black"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
+            {userError && <p className="text-red-500">{userError}</p>}
+            <Button
+                type="submit"
+                className="w-full mt-4"
+            >
+                Login
+            </Button>
+        </form>
+    </div>
+</div>
         </main>
      );
 }

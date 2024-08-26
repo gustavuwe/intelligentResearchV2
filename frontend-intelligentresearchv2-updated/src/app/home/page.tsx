@@ -638,7 +638,7 @@ export default function HomePage() {
                       className="gap-2 justify-start bg-black hover:bg-gray-800"
                       variant="default"
                     >
-                      <Link href="#" className="flex flex-row gap-2">
+                      <Link href="/resultados" className="flex flex-row gap-2">
                         <ChartColumn size={18} /> Dados das pesquisas
                       </Link>
                     </Button>
