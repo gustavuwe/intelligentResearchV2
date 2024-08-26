@@ -18,7 +18,7 @@ export const app = Fastify()
 //     expiresIn: '10m',
 //   },
 // }
-app.register(cors, { origin: false })
+app.register(cors, { origin: '*' })
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
