@@ -20,9 +20,10 @@ export const app = Fastify()
 // }
 app.register(cors, {
   // allow all origins
-  origin: '*',
-  // allow all methods
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+  origin: true,
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 })
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
