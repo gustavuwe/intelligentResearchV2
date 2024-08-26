@@ -18,7 +18,7 @@ export const app = Fastify()
 //     expiresIn: '10m',
 //   },
 // }
-
+app.register(cors, { origin: true })
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
@@ -26,7 +26,6 @@ app.register(fastifyCookie, {
   secret: env.JWT_SECRET,
 })
 app.register(registerRoutes)
-app.register(cors, { origin: true })
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
