@@ -29,7 +29,7 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
       })
       .send({
         sub: user.id,
