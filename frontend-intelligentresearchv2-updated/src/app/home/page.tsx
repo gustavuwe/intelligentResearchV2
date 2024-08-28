@@ -162,6 +162,8 @@ export default function HomePage() {
   const [longitude, setLongitude] = useState<string | null>(null);
 
   // ui components
+  const [registeredCandidates2, setRegisteredCandidates2] = useState<string[]>([]);
+  const [registeredVoters2, setRegisteredVoters2] = useState<string[]>([]);
   const [researches, setResearches] = useState<Research[]>([]);
   const [newResearch, setNewResearch] = useState({
     title: "",
@@ -187,6 +189,7 @@ export default function HomePage() {
   const [voterName, setVoterName] = useState("");
   const [voterPhoneNumber, setVoterPhoneNumber] = useState("");
   const [errors, setErrors] = useState<{ nome?: string, contato?: string }>({});
+  const [errors2, setErrors2] = useState<{ nome?: string, contato?: string }>({});
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -194,8 +197,6 @@ export default function HomePage() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
           withCredentials: true,
         });
-
-        console.log(response)
 
         if (response.status !== 200) {
           router.push("/login");
@@ -251,7 +252,7 @@ export default function HomePage() {
     };
 
     getResearches();
-  }, [refresh, refreshVoters, refreshCandidates]);
+  }, []);
 
   useEffect(() => {
     async function getRegisteredCandidates() {
@@ -260,13 +261,16 @@ export default function HomePage() {
       });
 
       if (response.status === 200) {
-        response.data.candidates.map((candidate: Candidate) =>
-          registeredCandidates.push(candidate.name)
-        );
+        // response.data.candidates.map((candidate: Candidate) =>
+        //   // registeredCandidates.push(candidate.name)
+        //   setRegisteredCandidates2((prevCandidates) => [...prevCandidates, candidate.name])
+        // );
+        const candidatesNames = response.data.candidates.map((candidate: Candidate) => candidate.name);
+        setRegisteredCandidates2(candidatesNames);
       }
     }
     getRegisteredCandidates();
-  }, [refreshCandidates, refreshVoters, refresh]);
+  }, []);
 
   useEffect(() => {
     async function getRegisteredVoters() {
@@ -275,13 +279,16 @@ export default function HomePage() {
       });
 
       if (response.status === 200) {
-        response.data.voters.map((voter: Voter) =>
-          registeredVoters.push(voter.name)
-        );
+        // response.data.voters.map((voter: Voter) =>
+        //   // registeredVoters.push(voter.name)
+        //   setRegisteredVoters2((prevVoters) => [...prevVoters, voter.name])
+        // );
+        const voterNames = response.data.voters.map((voter: Voter) => voter.name);
+        setRegisteredVoters2(voterNames);
       }
     }
     getRegisteredVoters();
-  }, [refreshVoters, refreshCandidates, refresh]);
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -365,7 +372,7 @@ export default function HomePage() {
     const searchTerm = e.target.value;
     setCandidateSearch(searchTerm);
     setFilteredCandidates(
-      registeredCandidates.filter((candidate) =>
+      registeredCandidates2.filter((candidate) =>
         candidate.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -375,7 +382,7 @@ export default function HomePage() {
     const searchTerm = e.target.value;
     setVoterSearch(searchTerm);
     setFilteredVoters(
-      registeredVoters.filter((voter) =>
+      registeredVoters2.filter((voter) =>
         voter.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -425,8 +432,8 @@ export default function HomePage() {
             }
           );
           if (response.status === 201) {
+            setRegisteredCandidates2((prevCandidates) => [...prevCandidates, candidateSearch]);
             setCandidateSearch("");
-            setRefreshCandidates((prev) => !prev);
           }
         }
       } catch (err) {
@@ -437,14 +444,16 @@ export default function HomePage() {
 
   const handleAddVoter = async () => {
     const newErrors: { nome?: string } = {};
+    const newErrors2: { nome?: string } = {};
 
     setRefreshVoters((prev) => !prev);
-    console.log(selectedCandidate);
-    if (!selectedCandidate) newErrors.nome = "Insira o nome do votante";
+    if (!selectedCandidate) newErrors.nome = "Insira o nome do Candidato";
+    if (!voterName) newErrors2.nome = "Insira o nome do votante";
 
     setErrors(newErrors);
+    setErrors2(newErrors2);
 
-    if (selectedCandidate !== null && activeResearch !== null && !newErrors.nome) {
+    if (selectedCandidate !== null && activeResearch !== null && voterName !== null && !newErrors.nome) {
       try {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/voter/register`,
@@ -465,7 +474,7 @@ export default function HomePage() {
             withCredentials: true,
           }
         );
-
+        setRegisteredVoters2((prevVoters) => [...prevVoters, voterName]);
         setRefreshVoters((prev) => !prev);
       } catch (err) {
         console.error("Error adding voter:", err);
@@ -548,7 +557,6 @@ export default function HomePage() {
       );
 
       if (response.status === 201) {
-        console.log(getVoterId.data.voters[0].id);
         const updateVoterLoc = await axios.patch(
           `${process.env.NEXT_PUBLIC_API_URL}/voter/update/${getVoterId.data.voters[0].id}`,
           {
@@ -563,8 +571,6 @@ export default function HomePage() {
           }
         );
       }
-
-      console.log(response);
     } else {
       console.log("Dados faltando"); // TODO: refactor handle error
     }
@@ -581,7 +587,6 @@ export default function HomePage() {
         withCredentials: true,
       })
 
-      console.log(response);
 
       if (response.status === 200) {
         router.push('/login');
@@ -877,7 +882,7 @@ export default function HomePage() {
                           value={voterName}
                           onChange={(e) => setVoterName(e.target.value)}
                         />
-                        {errors.nome && <p className="text-sm text-red-500 w-[200px]">{errors.nome}</p>}
+                        {errors2.nome && <p className="text-sm text-red-500 w-[200px]">{errors2.nome}</p>}
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="phonenumber">Número para contato</Label>

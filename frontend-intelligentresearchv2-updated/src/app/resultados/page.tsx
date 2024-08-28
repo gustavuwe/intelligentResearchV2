@@ -97,7 +97,7 @@ export default function Component() {
       setResearches(response.data.researches);
     };
     fetchData();
-  });
+  }, []);
 
   if (isLoading || isAdmin !== true) {
     return <Loading />;
@@ -137,14 +137,6 @@ export default function Component() {
           ))}
         </div>
       </ScrollArea>
-      {selectedCard !== null && (
-        <div className="mt-6 p-4 bg-muted rounded-md">
-          <p>You selected: {researchCards[selectedCard].title}</p>
-          <p>
-            Click here to view the full graph (not implemented in this example)
-          </p>
-        </div>
-      )}
     </div>
   );
 }
