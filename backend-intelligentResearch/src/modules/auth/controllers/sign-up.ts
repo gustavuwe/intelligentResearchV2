@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { signUpSchema } from '../schemas/sign-up'
 import * as service from '../services'
+import { signJWT } from '../services/jwt'
 
 export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
   // zod to validate the request body
@@ -10,20 +11,7 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
   }
   try {
     const user = await service.signUp(data.data)
-
-    const token = await reply.jwtSign(
-      {},
-      {
-        sign: {
-          sub: user.id,
-        },
-      },
-    )
-
-    // const token = jwt.sign(
-    //   { id: user.id, username: user.username, role: user.role },
-    //   String(env.JWT_SECRET),
-    // )
+    const token = signJWT(user)
 
     reply
       .setCookie('token', token, {

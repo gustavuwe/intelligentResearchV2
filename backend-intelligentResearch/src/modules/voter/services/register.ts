@@ -8,8 +8,6 @@ export const register = async (data: RegisterVoterSchema) => {
     data: {
       name: parsedData.name,
       phoneNumber: parsedData.phoneNumber,
-      lat: parsedData.lat,
-      long: parsedData.long,
       Candidate: {
         connect: {
           id: parsedData.candidateId,

@@ -1,10 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import * as service from '../services'
 
-export const fetchVoters = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+export const fetchVoters = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
     const voters = await service.fetch()
 

@@ -6,8 +6,6 @@ export const deleteResearch = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-  await request.jwtVerify()
-
   const data = deleteResearchSchema.safeParse(request.body)
 
   if (!data.success) {

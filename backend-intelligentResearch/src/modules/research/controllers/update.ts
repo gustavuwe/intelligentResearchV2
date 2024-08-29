@@ -3,9 +3,6 @@ import { updateResearchSchema } from '../schemas/update'
 import * as service from '../services'
 
 export const update = async (request: FastifyRequest, reply: FastifyReply) => {
-  // zod to validate the request body
-  await request.jwtVerify()
-
   const data = updateResearchSchema.safeParse(request.body)
   if (!data.success) {
     return reply.status(400).send(data.error)

@@ -7,8 +7,3 @@ declare module '@fastify/jwt' {
     }
   }
 }
-// export interface JwtPayload {
-//   userId: string
-//   username: string
-//   role: 'USER' | 'ADMIN'
-// }

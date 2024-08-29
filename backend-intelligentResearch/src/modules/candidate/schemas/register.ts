@@ -11,17 +11,6 @@ export const VotersSchema = z.object({
   Vote: z.array(VoteSchema),
 })
 
-/* 
-  id         String    @id @default(uuid())
-  name       String    @unique
-  imgUrl     String
-  votes      Int       @default(0)
-  Research   Research? @relation(fields: [researchId], references: [id])
-  researchId String?
-  Voters     Voter[]
-  Vote       Vote[]
-*/
-
 export const registerCandidateSchema = z.object({
   name: z.string(),
   imgUrl: z.string(),

@@ -1,10 +1,7 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import * as service from '../services'
 import { Voter } from '@prisma/client'
-import jwt from 'jsonwebtoken'
-import { env } from '@/lib/env'
-import { JwtPayload } from '@/modules/auth/controllers/verify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { updateVoterSchema } from '../schemas/update'
+import * as service from '../services'
 
 export const updateVoter = async (
   request: FastifyRequest,
@@ -12,14 +9,6 @@ export const updateVoter = async (
 ): Promise<Voter> => {
   try {
     const { id } = request.params as { id: string }
-
-    const token = request.cookies.token
-
-    if (!token) {
-      return reply.status(401).send({ message: 'No token provided' })
-    }
-
-    jwt.verify(token, env.JWT_SECRET) as JwtPayload
 
     const data = updateVoterSchema.safeParse(request.body)
     if (!data.success) {

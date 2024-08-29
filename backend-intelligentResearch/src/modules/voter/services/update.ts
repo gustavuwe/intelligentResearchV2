@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { env } from '@/lib/env'
 import { prisma } from '@/lib/prisma'
 import { UpdateVoterSchema, updateVoterSchema } from '../schemas/update'
-import { env } from '@/lib/env'
 
 export const update = async (id: string, data: UpdateVoterSchema) => {
   const parsedData = updateVoterSchema.parse(data)
@@ -9,7 +9,7 @@ export const update = async (id: string, data: UpdateVoterSchema) => {
   async function getNeighborhood(latitude: string, longitude: string) {
     const apiKey = env.GOOGLE_API_KEY
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
-    // const url = `https://api.mapbox.com/geocoding/v6/reverse?longitude=${longitude}&latitude=${latitude}`
+
     const response = await fetch(url)
     const data: any = await response.json()
 

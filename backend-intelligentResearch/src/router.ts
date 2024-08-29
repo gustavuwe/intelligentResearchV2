@@ -1,51 +1,62 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyPluginAsync } from 'fastify'
+import { verifyJWT } from './middlewares/verify-jwt'
+import { logout } from './modules/auth/controllers/logout'
 import { signIn } from './modules/auth/controllers/sign-in'
 import { signUp } from './modules/auth/controllers/sign-up'
-import { register } from './modules/research/controllers/register'
-import { update } from './modules/research/controllers/update'
+import { fetchCandidates } from './modules/candidate/controllers/fetch'
+import { findByResearchId } from './modules/candidate/controllers/findById'
+import { findCandidateByName } from './modules/candidate/controllers/findCandidateByName'
+import { registerCandidate } from './modules/candidate/controllers/register'
 import { deleteResearch } from './modules/research/controllers/delete'
 import { fetchResearches } from './modules/research/controllers/fetch'
-import { registerVoter } from './modules/voter/controllers/register'
+import { register } from './modules/research/controllers/register'
+import { update } from './modules/research/controllers/update'
 import { registerVote } from './modules/vote/controllers/register'
-import { registerCandidate } from './modules/candidate/controllers/register'
-import { verify } from './modules/auth/controllers/verify'
-import { fetchCandidates } from './modules/candidate/controllers/fetch'
 import { fetchVoters } from './modules/voter/controllers/fetch'
 import { findByName } from './modules/voter/controllers/findByName'
-import { findCandidateByName } from './modules/candidate/controllers/findCandidateByName'
+import { registerVoter } from './modules/voter/controllers/register'
 import { updateVoter } from './modules/voter/controllers/update'
-import { verifyAdmin } from './modules/auth/controllers/verify-admin'
-import { logout } from './modules/auth/controllers/logout'
-import { findByResearchId } from './modules/candidate/controllers/findById'
+
+const authRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/sign-in', signIn)
+  fastify.post('/sign-up', signUp)
+  fastify.post('/logout', logout)
+}
+
+const researchRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/register', register)
+  fastify.put('/update', update)
+  fastify.delete('/delete', deleteResearch)
+  fastify.get('/', fetchResearches)
+}
+
+const candidateRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/register', registerCandidate)
+  fastify.get('/', fetchCandidates)
+  fastify.get('/findByName', findCandidateByName)
+  fastify.get('/findByResearchId/:id', findByResearchId)
+}
+
+const voterRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/register', registerVoter)
+  fastify.get('/', fetchVoters)
+  fastify.get('/findByName', findByName)
+  fastify.patch('/update/:id', updateVoter)
+}
+
+const voteRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/register', registerVote)
+}
 
 export const registerRoutes = async (app: FastifyInstance) => {
-  // auth
-  app.post('/auth/sign-in', signIn)
-  app.post('/auth/sign-up', signUp)
-  app.post('/auth/logout', logout)
+  app.register(authRoutes, { prefix: '/auth' })
 
-  // verify token
-  app.get('/auth/verify', verify)
-  app.get('/auth/verify-admin', verifyAdmin)
+  app.register(async (fastify) => {
+    fastify.addHook('onRequest', verifyJWT)
 
-  // research
-  app.post('/research/register', register)
-  app.put('/research/update', update)
-  app.delete('/research/delete', deleteResearch)
-  app.get('/research', fetchResearches)
-
-  // candidate
-  app.post('/candidate/register', registerCandidate)
-  app.get('/candidate', fetchCandidates)
-  app.get('/candidate/findByName', findCandidateByName)
-  app.get('/candidate/findByResearchId/:id', findByResearchId)
-
-  // voter
-  app.post('/voter/register', registerVoter)
-  app.get('/voter', fetchVoters)
-  app.get('/voter/findByName', findByName)
-  app.patch('/voter/update/:id', updateVoter)
-
-  // vote
-  app.post('/vote/register', registerVote)
+    fastify.register(researchRoutes, { prefix: '/research' })
+    fastify.register(candidateRoutes, { prefix: '/candidate' })
+    fastify.register(voterRoutes, { prefix: '/voter' })
+    fastify.register(voteRoutes, { prefix: '/vote' })
+  })
 }

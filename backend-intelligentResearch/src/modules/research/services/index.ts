@@ -1,4 +1,6 @@
-export * from './register'
-export * from './update'
+export * from './countVotesOfVoters'
 export * from './delete'
 export * from './fetch'
+export * from './register'
+export * from './update'
+

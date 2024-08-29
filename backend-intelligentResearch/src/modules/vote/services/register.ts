@@ -11,7 +11,7 @@ export const register = async (data: RegisterVoteSchema) => {
     throw new Error('Invalid data')
   }
 
-  await prisma.vote.create({
+  return prisma.vote.create({
     data: {
       voter: {
         connect: {

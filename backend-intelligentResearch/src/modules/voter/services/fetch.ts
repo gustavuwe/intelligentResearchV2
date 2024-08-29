@@ -1,9 +1,8 @@
 import { prisma } from '@/lib/prisma'
 
-export const fetch = async () => {
-  return await prisma.voter.findMany({
+export const fetch = async () =>
+  prisma.voter.findMany({
     include: {
       Vote: true,
     },
   })
-}

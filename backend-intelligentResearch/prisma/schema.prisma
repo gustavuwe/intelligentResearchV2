@@ -67,10 +67,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator dbml {
-  provider = "prisma-dbml-generator"
-}
-
 datasource db {
   provider = "cockroachdb"
   url      = env("DATABASE_URL")
@@ -102,29 +98,29 @@ model Research {
 }
 
 model Voter {
-  id           String    @id @default(uuid())
-  name         String
-  phoneNumber  String?
-  lat          String
-  long         String
-  neighborhood String?
-  Candidate    Candidate @relation(fields: [candidateId], references: [id])
-  candidateId  String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  Vote         Vote[]
+  id          String    @id @default(uuid())
+  name        String
+  phoneNumber String?
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Vote        Vote[]
 }
 
 model Vote {
-  id          String    @id @default(uuid())
-  voter       Voter     @relation(fields: [voterId], references: [id])
-  voterId     String
-  candidate   Candidate @relation(fields: [candidateId], references: [id])
-  candidateId String
-  research    Research  @relation(fields: [researchId], references: [id])
-  researchId  String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(uuid())
+  voter        Voter     @relation(fields: [voterId], references: [id])
+  voterId      String
+  candidate    Candidate @relation(fields: [candidateId], references: [id])
+  candidateId  String
+  research     Research  @relation(fields: [researchId], references: [id])
+  researchId   String
+  lat          String?
+  long         String?
+  neighborhood String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Candidate {

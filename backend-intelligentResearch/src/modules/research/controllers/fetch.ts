@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import * as service from '../services'
 
 export const fetchResearches = async (
-  request: FastifyRequest,
+  _: FastifyRequest,
   reply: FastifyReply,
 ) => {
   try {
