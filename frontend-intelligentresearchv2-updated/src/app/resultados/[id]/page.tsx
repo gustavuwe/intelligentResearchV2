@@ -144,6 +144,8 @@ import axios from "axios";
 import { Candidate, Voter } from "@/app/home/page";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import { getCookie } from "@/utils/cookieUtils";
+import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
 
 interface Idata {
   neighborhood: string;
@@ -214,55 +216,61 @@ export default function Component() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateData | null>({ name: "todos os candidatos", data: [] });
   const [isAdmin, setIsAdmin] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<CustomJWTPayload | null>(null);
+
+  // useEffect(() => {
+  //   const cookieToken = getCookie('token');
+  //   setToken(cookieToken);
+
+  //   async function checkAuth() {
+  //     const payload = await verifyJWT();
+  //     if (payload) {
+  //       setUserData(payload);
+  //     }
+  //   }
+
+  //   checkAuth();
+  // }, [router, userData]);
+
+  // useEffect(() => {
+  //   async function checkAuthAdmin() {
+  //     if (token) {
+  //       console.log(userData)
+  //       if (userData?.role === 'ADMIN') {
+  //         setIsAdmin(true);
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //   }
+  //   checkAuthAdmin();
+  // }, [userData, token])
 
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
-          withCredentials: true,
-        });
+    async function checkAuth() {
+      const cookieToken = getCookie('token');
+      setToken(cookieToken);
 
-        console.log(response)
-
-        if (response.status !== 200) {
-          router.push("/login");
-        } else {
-          setIsLoading(false);
-        }
-      } catch (err) {
-        console.error("Token verification failed:", err);
-        router.push("/login");
-      }
-    };
-
-    verifyToken();
-  }, [router]);
-
-  useEffect(() => {
-    const verifyTokenAdmin = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-admin`,
-          {
-            withCredentials: true,
+      if (cookieToken) {
+        try {
+          const payload = await verifyJWT();
+          if (payload) {
+            setUserData(payload);
+            setIsAdmin(payload.role === 'ADMIN');
+          } else {
+            router.push('/login');
           }
-        );
-
-        if (response.status !== 200) {
-          setIsAdmin(false);
-          router.push("/login");
-        } else {
-          setIsAdmin(true);
+        } catch (error) {
+          router.push('/login')
+          console.error('Failed to verify JWT:', error);
         }
-      } catch (err) {
-        console.error("Token verification failed:", err);
-        setIsAdmin(false);
-        router.push("/login");
       }
-    };
 
-    verifyTokenAdmin();
-  }, [isAdmin, router]);
+      setIsLoading(false);
+    }
+
+    checkAuth();
+  }, [router.asPath]);
 
   // useEffect(() => {
   //   try {

@@ -19,9 +19,9 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
     reply
       .setCookie('token', token, {
         path: '/',
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        sameSite: 'lax',
       })
       .send({
         sub: user.id,

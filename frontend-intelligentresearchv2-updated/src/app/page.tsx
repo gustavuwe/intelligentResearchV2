@@ -152,8 +152,8 @@ export default function Component() {
         </section>
         <section id="benefits" className="h-[700px] py-20 bg-gray-900 text-white transform -mt-20 md:h-[550px] lg:h-[450px]">
           <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 -skew-y-2">Por que escolher a IntelligentResearch?</h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 -skew-y-2">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 -skew-y-[-1deg]">Por que escolher a IntelligentResearch?</h2>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 -skew-y-[-1deg]">
               {[
                 "Salve o tempo do pesquisador em até 60%",
                 "Acesse um dashboard da sua pesquisa completa com gráficos baseados na localização",
@@ -248,8 +248,8 @@ export default function Component() {
             <p className="mx-auto text-center font-bold max-w-[600px] text-white md:text-xl/relaxed lg:text-2xl/relaxed">Seja um dos pioneiros a desfrutar da <span className="text-blue-300">NOSSA</span> tecnologia para pesquisas.</p>
           </div>
         </section>
-        <section className="py-20 bg-black text-white -skew-y-3 transform -mt-20">
-          <div className="container px-4 md:px-6 -skew-y-3">
+        <section className="py-20 bg-black text-white transform -mt-20">
+          <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
@@ -285,7 +285,7 @@ export default function Component() {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <Zap className="h-6 w-6 text-yellow-400 mr-2" />
-            <span className="font-bold text-xl">ResearchRover</span>
+            <span className="font-bold text-xl">IntelligentResearch</span>
           </div>
           <nav className="flex gap-4 sm:gap-6">
             <Link className="text-sm hover:text-yellow-400 transition-colors" href="#">

@@ -19,6 +19,9 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Research } from "../home/page";
+import { UNSTABLE_REVALIDATE_RENAME_ERROR } from "next/dist/lib/constants";
+import { getCookie } from "@/utils/cookieUtils";
+import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
 
 const researchCards = [
   {
@@ -41,59 +44,38 @@ export default function Component() {
   const [researches, setResearches] = useState<Research[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<CustomJWTPayload | null>(null);
 
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
-          withCredentials: true,
-        });
+    const cookieToken = getCookie('token');
+    setToken(cookieToken);
 
-        console.log(response)
-
-        if (response.status !== 200) {
-          router.push("/login");
-        } else {
-          setIsLoading(false);
-        }
-      } catch (err) {
-        console.error("Token verification failed:", err);
-        router.push("/login");
+    async function checkAuth() {
+      const payload = await verifyJWT();
+      if (payload) {
+        setUserData(payload);
       }
-    };
-
-    verifyToken();
-  }, [router]);
-
-  useEffect(() => {
-    const verifyTokenAdmin = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-admin`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.status !== 200) {
-          setIsAdmin(false);
-          router.push("/login");
-        } else {
-          setIsAdmin(true);
-        }
-      } catch (err) {
-        console.error("Token verification failed:", err);
-        setIsAdmin(false);
-        router.push("/login");
+      setIsLoading(false);
+    }
+    
+    if (cookieToken) {
+      checkAuth();
+      if (userData?.role === 'ADMIN') {
+        setIsAdmin(true);
+      } else {
+        router.push('/login')
       }
-    };
-
-    verifyTokenAdmin();
-  }, [isAdmin, router]);
+    } else {
+      router.push('/login');
+    }
+  }, [router, userData]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/research`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/research`, {
+        withCredentials: true,
+      });
       setResearches(response.data.researches);
     };
     fetchData();
