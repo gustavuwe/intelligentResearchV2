@@ -256,7 +256,7 @@ export default function Component() {
           const payload = await verifyJWT();
           if (payload) {
             setUserData(payload);
-            if (payload.role === 'admin') {
+            if (payload.role === 'ADMIN') {
               setIsAdmin(true);
             } else {
               router.push('/login');
