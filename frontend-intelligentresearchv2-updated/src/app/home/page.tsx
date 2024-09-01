@@ -494,71 +494,92 @@ export default function HomePage() {
 
   const handleSendVote = async () => {
     // TODO: send vote to server
-    const getVoterId = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/voter/findByName`,
-      {
-        params: {
-          name: selectedVoter,
-        },
-        withCredentials: true,
-      }
-    );
+    // const getVoterId = await axios.get(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/voter/findByName`,
+    //   {
+    //     params: {
+    //       name: selectedVoter,
+    //     },
+    //     withCredentials: true,
+    //   }
+    // );
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLatitude(position.coords.latitude.toString());
-        setLongitude(position.coords.longitude.toString());
-      });
-    }
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition((position) => {
+    //     setLatitude(position.coords.latitude.toString());
+    //     setLongitude(position.coords.longitude.toString());
+    //   });
+    // }
 
-    const getCandidateId = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/candidate/findByName`,
-      {
-        params: {
-          name: selectedCandidate,
-        },
-        withCredentials: true,
-      }
-    );
+    // const getCandidateId = await axios.get(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/candidate/findByName`,
+    //   {
+    //     params: {
+    //       name: selectedCandidate,
+    //     },
+    //     withCredentials: true,
+    //   }
+    // );
 
+    // if (
+    //   activeResearch !== null &&
+    //   selectedCandidate !== null &&
+    //   selectedVoter !== null
+    // ) {
+    //   const response = await axios.post(
+    //     `${process.env.NEXT_PUBLIC_API_URL}/vote/register`,
+    //     {
+    //       voterId: getVoterId.data.voters[0].id,
+    //       candidateId: getCandidateId.data.candidate[0].id,
+    //       researchId: researches[activeResearch].id,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       withCredentials: true,
+    //     }
+    //   );
+
+    //   if (response.status === 201) {
+    //     const updateVoterLoc = await axios.patch(
+    //       `${process.env.NEXT_PUBLIC_API_URL}/voter/update/${getVoterId.data.voters[0].id}`,
+    //       {
+    //         lat: latitude !== null ? latitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
+    //         long: longitude !== null ? longitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
+    //       },
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         withCredentials: true,
+    //       }
+    //     );
+    //   }
+    // } else {
+    //   console.log("Dados faltando"); // TODO: refactor handle error
+    // }
     if (
-      activeResearch !== null &&
-      selectedCandidate !== null &&
-      selectedVoter !== null
-    ) {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/vote/register`,
-        {
-          voterId: getVoterId.data.voters[0].id,
-          candidateId: getCandidateId.data.candidate[0].id,
+        activeResearch !== null &&
+        selectedCandidate !== null &&
+        selectedVoter !== null
+      ) {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/vote/sendVote`, {
+          voterName: selectedVoter,
+          candidateName: selectedCandidate,
           researchId: researches[activeResearch].id,
-        },
-        {
+          lat: latitude !== null ? latitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
+          long: longitude !== null ? longitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
+        }, {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true,
+          withCredentials: true
         }
-      );
-
-      if (response.status === 201) {
-        const updateVoterLoc = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/voter/update/${getVoterId.data.voters[0].id}`,
-          {
-            lat: latitude !== null ? latitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
-            long: longitude !== null ? longitude.toString() : "", // TODO: maybe add a error to say that cant get geoloc
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
+        )
+      } else {
+        console.log("Dados faltando"); // TODO: refactor handle error
       }
-    } else {
-      console.log("Dados faltando"); // TODO: refactor handle error
-    }
 
     setIsVoteModalOpen(false);
     setSelectedCandidate("");
