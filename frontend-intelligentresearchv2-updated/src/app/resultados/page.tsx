@@ -61,10 +61,12 @@ export default function Component() {
     
     if (cookieToken) {
       checkAuth();
-      if (userData?.role === 'ADMIN') {
-        setIsAdmin(true);
-      } else {
-        router.push('/login')
+      if (userData) {
+        if (userData.role === 'ADMIN') {
+          setIsAdmin(true);
+        } else {
+          router.push('/login')
+        }
       }
     } else {
       router.push('/login');

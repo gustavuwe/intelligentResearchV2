@@ -92,22 +92,7 @@ import {
 import Link from "next/link"; 
 import { verifyJWT } from "@/utils/jwtVerification";
 import { CustomJWTPayload } from "@/utils/jwtVerification";
-import { getCookie, getTokenFromCookie } from "@/utils/cookieUtils";
-
-// Mock data for existing researches
-// const initialResearches = [
-//   { id: 1, title: "City Council Election", description: "Annual city council election", date: "2023-05-15", candidates: ["John Doe", "Jane Smith"], voters: ["Voter1", "Voter2", "Voter3"], votes: 750 },
-//   { id: 2, title: "School Board Vote", description: "Selecting new school board members", date: "2023-05-14", candidates: ["Alice Johnson", "Bob Williams", "Carol Davis"], voters: ["Voter4", "Voter5"], votes: 450 },
-//   { id: 3, title: "Neighborhood Association", description: "Electing neighborhood representatives", date: "2023-05-13", candidates: ["David Brown", "Eva Martinez", "Frank Wilson", "Grace Lee"], voters: ["Voter6", "Voter7", "Voter8", "Voter9"], votes: 180 },
-//   { id: 4, title: "Local Referendum", description: "Vote on new city park proposal", date: "2023-05-12", candidates: ["Yes", "No"], voters: ["Voter10", "Voter11", "Voter12"], votes: 1500 },
-//   { id: 5, title: "Student Government", description: "University student council elections", date: "2023-05-11", candidates: ["Team A", "Team B", "Team C"], voters: ["Voter13", "Voter14", "Voter15", "Voter16", "Voter17"], votes: 600 },
-// ]
-
-// Mock data for registered candidates and voters
-// const registeredCandidates = [
-//   "John Doe", "Jane Smith", "Alice Johnson", "Bob Williams", "Carol Davis",
-//   "David Brown", "Eva Martinez", "Frank Wilson", "Grace Lee"
-// ]
+import { getCookie } from "@/utils/cookieUtils";
 
 export interface Candidate {
   id?: string;
