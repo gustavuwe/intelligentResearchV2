@@ -256,7 +256,11 @@ export default function Component() {
           const payload = await verifyJWT();
           if (payload) {
             setUserData(payload);
-            setIsAdmin(payload.role === 'ADMIN');
+            if (payload.role === 'admin') {
+              setIsAdmin(true);
+            } else {
+              router.push('/login');
+            }
           } else {
             router.push('/login');
           }
@@ -270,7 +274,7 @@ export default function Component() {
     }
 
     checkAuth();
-  }, [router.asPath]);
+  }, [router]);
 
   // useEffect(() => {
   //   try {
@@ -455,7 +459,7 @@ export default function Component() {
   }, [candidatesData2]);
 
 
-  if (isLoading || isAdmin !== true) {
+  if (isLoading) {
     return <Loading />;
   }
 

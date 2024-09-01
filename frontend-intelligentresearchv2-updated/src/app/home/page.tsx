@@ -644,6 +644,7 @@ export default function HomePage() {
                 </SheetHeader>
 
                 <div className="flex flex-col gap-4 py-5">
+                  {isAdmin && (
                   <SheetClose asChild>
                     <Button
                       className="gap-2 justify-start bg-black hover:bg-gray-800"
@@ -654,6 +655,7 @@ export default function HomePage() {
                       </Link>
                     </Button>
                   </SheetClose>
+                  )}
                   <SheetClose asChild>
                     <Button className="gap-2 justify-start" variant="outline">
                       <Link href="/reportar" className="flex flex-row gap-2">
