@@ -1,7 +1,7 @@
 "use client";
 
-import { cache, useEffect, useRef, useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Candidate } from "@/app/home/page";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,21 +16,19 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
 import axios from "axios";
-import { Candidate } from "@/app/home/page";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { getCookie } from "@/utils/cookieUtils";
-import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
+import { Menu } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet.heat'
+import 'leaflet.heat';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 // @ts-ignore
-import L from 'leaflet'
+import L from 'leaflet';
 
 declare global {
   interface Window {
@@ -71,42 +69,6 @@ interface VoteData2 {
   updatedAt?: string;
 }
 
-// id           String    @id @default(uuid())
-//   voter        Voter     @relation(fields: [voterId], references: [id])
-//   voterId      String
-//   candidate    Candidate @relation(fields: [candidateId], references: [id])
-//   candidateId  String
-//   research     Research  @relation(fields: [researchId], references: [id])
-//   researchId   String
-//   lat          String?
-//   long         String?
-//   neighborhood String?
-//   createdAt    DateTime  @default(now())
-//   updatedAt    DateTime  @updatedAt
-
-// const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number }) => {
-//   const map = useMap()
-//   const heatLayerRef = useRef<any>(null)
-
-//   useEffect(() => {
-//     if (!map) return
-
-//     if (heatLayerRef.current) {
-//       map.removeLayer(heatLayerRef.current)
-//     }
-
-//     // @ts-ignore
-//     heatLayerRef.current = L.heatLayer(data, { radius: 25 }).addTo(map)
-
-//     return () => {
-//       if (heatLayerRef.current) {
-//         map.removeLayer(heatLayerRef.current)
-//       }
-//     }
-//   }, [map, data, intensity])
-
-//   return null
-// }
 
 const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number }) => {
   const map = useMap();
@@ -173,15 +135,6 @@ export default function Component() {
   useEffect(() => {
     setIsMounted(true)
   }, [])
-
-  const heatmapData = [
-    [51.505, -0.09, 0.5],
-    [51.51, -0.1, 0.7],
-    [51.51, -0.12, 0.3],
-    [51.52, -0.11, 0.6],
-    [51.53, -0.1, 0.4],
-    [51.51, -0.08, 0.8],
-  ]
 
   useEffect(() => {
     async function checkAuth() {
@@ -277,15 +230,6 @@ export default function Component() {
     const allLocations: number[][] = []
 
     // @ts-ignore
-    // data?.Vote.forEach((vote: VoteData2): number[] => {
-    //   // const location: locationsData = {
-    //   //   lat: vote.lat,
-    //   //   long: vote.long,
-    //   //   intensity: 1,
-    //   // }
-    //   const location: number[] = [parseFloat(vote.lat), parseFloat(vote.long)]
-    //   allLocations.push(location)
-    // })
     data?.Vote.forEach((vote: VoteData2) => {
       const location: number[] = [parseFloat(vote.lat), parseFloat(vote.long)]
       allLocations.push(location)
@@ -389,10 +333,6 @@ export default function Component() {
             </div>
           </CardFooter>
         </Card>
-            {/* <div className="pt-[80px]">
-              <h1 className="font-bold text-2xl sm:ml-[25%]">Visualização do gráfico acima</h1>
-              <p className="pt-3 text-lg max-w-[350px] sm:ml-[25%] text-center">Grafico de barras separado por bairros com a quantidade de votos do candidato selecionado.</p>
-            </div> */}
       </main>
     </div>
     <section className={`mt-[120px] md:mt-[400px] min-h-[1000px] rounded-lg overflow-hidden`}>

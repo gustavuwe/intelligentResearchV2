@@ -1,9 +1,8 @@
-import { jwtVerify, JWTPayload } from 'jose';
+import { JWTPayload } from 'jose';
 
 export interface CustomJWTPayload extends JWTPayload {
   role: string;
   sub: string;
-  // Add any other custom properties your JWT might have
 }
 
 export async function verifyJWT(): Promise<CustomJWTPayload | null> {
@@ -14,9 +13,6 @@ export async function verifyJWT(): Promise<CustomJWTPayload | null> {
       return null;
     }
 
-    // const secretKey = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
-    // const { payload } = await jwtVerify(token, secretKey);
-    // return payload as CustomJWTPayload;
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace('-', '+').replace('_', '/');
     const payload = await JSON.parse(window.atob(base64));
@@ -28,9 +24,9 @@ export async function verifyJWT(): Promise<CustomJWTPayload | null> {
   }
 }
 
-function getCookie(name: string): string | null {
+export function getCookie(name: string): string | null {
   if (typeof window === 'undefined') {
-    return null; // Estamos no servidor
+    return null;
   }
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);

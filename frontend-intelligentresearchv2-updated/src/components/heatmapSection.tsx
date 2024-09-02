@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'rc-slider/assets/index.css';
-import Slider from 'rc-slider';
 import * as L from 'leaflet';
 import 'leaflet.heat';
+import 'leaflet/dist/leaflet.css';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 
 const HeatmapLayer: React.FC<{ points: any[]; intensity: number }> = ({ points, intensity }) => {
   const map = useMap();
@@ -53,6 +53,7 @@ const HeatmapSection: React.FC = () => {
           max={3}
           step={0.1}
           value={intensity}
+          // @ts-ignore
           onChange={value => setIntensity(value)}
         />
       </div>

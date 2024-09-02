@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { MapPin, Clock, Search, Zap, BarChart, Users, ChevronRight, Menu, MenuIcon, HomeIcon, MedalIcon, BlocksIcon, LogInIcon } from "lucide-react"
-import Link from 'next/link'
-import Image from 'next/image'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import 'dotenv/config'
+import { BlocksIcon, ChevronRight, Clock, HomeIcon, LogInIcon, MapPin, MedalIcon, MenuIcon, Search, Zap } from "lucide-react"
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Component() {
   const [email, setEmail] = useState('')
@@ -167,79 +167,6 @@ export default function Component() {
             </div>
           </div>
         </section>
-        {/* <section id="testimonials" className="py-20 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 skew-y-3 transform -mt-20">
-          <div className="container px-4 md:px-6 -skew-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-white">Researcher Testimonials</h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Dr. Emily Chen</h3>
-                    <p className="text-sm text-gray-500">Professor of Biology, Stanford University</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    ResearchRover has transformed my workflow. Its like having a brilliant research assistant available 24/7.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Dr. Michael Patel</h3>
-                    <p className="text-sm text-gray-500">Lead Researcher, NASA</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    The geo-location feature in ResearchRover has been instrumental in our climate change studies across different regions.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Sarah Johnson</h3>
-                    <p className="text-sm text-gray-500">PhD Candidate, MIT</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    As a PhD student, ResearchRovers time-saving tools have been a game-changer. I can focus more on analysis and less on administrative tasks.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section> */}
         <section id="testimonials" className="py-20 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 skew-y-3 transform -mt-20">
           <div className="container px-4 md:px-6 -skew-y-3 h-[300px]">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-white">

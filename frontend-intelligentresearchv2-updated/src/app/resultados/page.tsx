@@ -1,27 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  BarChart3Icon,
-  LineChartIcon,
-  PieChartIcon,
-  ScatterChartIcon,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Research } from "../home/page";
-import { UNSTABLE_REVALIDATE_RENAME_ERROR } from "next/dist/lib/constants";
-import { getCookie } from "@/utils/cookieUtils";
-import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
 
 const researchCards = [
   {

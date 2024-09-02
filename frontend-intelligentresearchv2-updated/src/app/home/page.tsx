@@ -1,44 +1,13 @@
-// import axios from 'axios';
-// import { cookies } from 'next/headers';
-// import { redirect } from 'next/navigation';
-
-// export default async function HomePage() {
-//   const cookieStore = cookies();
-//   const token = cookieStore.get('token')?.value;
-
-//   if (!token) {
-//     redirect('/login');
-//   }
-
-//   try {
-//     const response = await axios.get('http://localhost:3000/verify', {
-//       headers: {
-//         Cookie: `token=${token}`,
-//       },
-//     });
-
-//     if (response.status !== 200) {
-//       redirect('/login');
-//     }
-//   } catch (error) {
-//     redirect('/login');
-//   }
-
-//   return <div>Conteúdo protegido</div>;
-// }
-
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import axios from "axios";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Label } from "@/components/ui/label";
 import {
   Collapsible,
   CollapsibleContent,
@@ -48,39 +17,34 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  PlusIcon,
-  SearchIcon,
-  UserPlusIcon,
-  UsersIcon,
-  VoteIcon,
-  ChevronDownIcon,
-  SendIcon,
-  XIcon,
-  TrashIcon,
-  MegaphoneIcon,
-  MenuIcon,
-  HomeIcon,
-  LogOutIcon,
-  GitGraphIcon,
-  ChartColumn,
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
+import {
+  ChartColumn,
+  ChevronDownIcon,
+  LogOutIcon,
+  MegaphoneIcon,
+  MenuIcon,
+  PlusIcon,
+  SendIcon,
+  TrashIcon,
+  UsersIcon,
+  VoteIcon,
+  XIcon
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-import { PopoverClose } from "@radix-ui/react-popover";
 import {
   Sheet,
   SheetClose,
@@ -89,10 +53,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Link from "next/link"; 
-import { verifyJWT } from "@/utils/jwtVerification";
-import { CustomJWTPayload } from "@/utils/jwtVerification";
-import { getCookie } from "@/utils/cookieUtils";
+import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
+import { PopoverClose } from "@radix-ui/react-popover";
+import Link from "next/link";
 
 export interface Candidate {
   id?: string;
