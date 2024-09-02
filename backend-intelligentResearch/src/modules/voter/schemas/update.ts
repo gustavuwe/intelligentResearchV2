@@ -1,8 +1,8 @@
-import { z } from 'zod'
+// import { z } from 'zod'
 
-export const updateVoterSchema = z.object({
-  lat: z.string(),
-  long: z.string(),
-})
+// export const updateVoterSchema = z.object({
+//   lat: z.string(),
+//   long: z.string(),
+// })
 
-export type UpdateVoterSchema = z.infer<typeof updateVoterSchema>
+// export type UpdateVoterSchema = z.infer<typeof updateVoterSchema>

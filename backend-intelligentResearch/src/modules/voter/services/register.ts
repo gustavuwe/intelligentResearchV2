@@ -13,8 +13,6 @@ export const register = async (data: RegisterVoterSchema) => {
           id: parsedData.candidateId,
         },
       },
-      lat: parsedData.lat !== null ? parsedData.lat : '',
-      long: parsedData.long !== null ? parsedData.long : '',
       Vote: {
         create: parsedData.Vote.map((vote) => ({
           id: vote.id,

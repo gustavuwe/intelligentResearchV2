@@ -3,9 +3,9 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" STRING NOT NULL,
-    "username" STRING NOT NULL,
-    "password" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -15,10 +15,10 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Research" (
-    "id" STRING NOT NULL,
-    "title" STRING NOT NULL,
-    "startDate" STRING NOT NULL,
-    "endDate" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "startDate" TEXT NOT NULL,
+    "endDate" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -27,13 +27,10 @@ CREATE TABLE "Research" (
 
 -- CreateTable
 CREATE TABLE "Voter" (
-    "id" STRING NOT NULL,
-    "name" STRING NOT NULL,
-    "phoneNumber" STRING,
-    "lat" STRING NOT NULL,
-    "long" STRING NOT NULL,
-    "neighborhood" STRING,
-    "candidateId" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "phoneNumber" TEXT,
+    "candidateId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -42,10 +39,13 @@ CREATE TABLE "Voter" (
 
 -- CreateTable
 CREATE TABLE "Vote" (
-    "id" STRING NOT NULL,
-    "voterId" STRING NOT NULL,
-    "candidateId" STRING NOT NULL,
-    "researchId" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "voterId" TEXT NOT NULL,
+    "candidateId" TEXT NOT NULL,
+    "researchId" TEXT NOT NULL,
+    "lat" TEXT,
+    "long" TEXT,
+    "neighborhood" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -54,11 +54,11 @@ CREATE TABLE "Vote" (
 
 -- CreateTable
 CREATE TABLE "Candidate" (
-    "id" STRING NOT NULL,
-    "name" STRING NOT NULL,
-    "imgUrl" STRING NOT NULL,
-    "votes" INT4 NOT NULL DEFAULT 0,
-    "researchId" STRING,
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "imgUrl" TEXT NOT NULL,
+    "votes" INTEGER NOT NULL DEFAULT 0,
+    "researchId" TEXT,
 
     CONSTRAINT "Candidate_pkey" PRIMARY KEY ("id")
 );

@@ -14,8 +14,13 @@ export async function verifyJWT(): Promise<CustomJWTPayload | null> {
       return null;
     }
 
-    const secretKey = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
-    const { payload } = await jwtVerify(token, secretKey);
+    // const secretKey = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
+    // const { payload } = await jwtVerify(token, secretKey);
+    // return payload as CustomJWTPayload;
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace('-', '+').replace('_', '/');
+    const payload = await JSON.parse(window.atob(base64));
+    console.log("Payload", payload)
     return payload as CustomJWTPayload;
   } catch (error) {
     console.error('Failed to verify JWT:', error);

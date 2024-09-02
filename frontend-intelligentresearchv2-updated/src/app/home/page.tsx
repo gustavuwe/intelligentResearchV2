@@ -207,6 +207,8 @@ export default function HomePage() {
       const payload = await verifyJWT();
       if (payload) {
         setUserData(payload);
+      } else {
+        console.log(payload)
       }
       setIsLoading(false);
     }
@@ -219,7 +221,7 @@ export default function HomePage() {
     } else {
       router.push('/login');
     }
-  }, [router, userData]);
+  }, [router, userData?.role]);
 
   useEffect(() => {
     const getResearches = async () => {
@@ -444,9 +446,7 @@ export default function HomePage() {
           `${process.env.NEXT_PUBLIC_API_URL}/voter/register`,
           {
             name: voterName,
-            phoneNumber: voterPhoneNumber,
-            lat: "", // TODO: get lat and long from map
-            long: "", // TODO: get lat and long from map
+            phoneNumber: voterPhoneNumber ?? "",
             candidateId: researches[activeResearch].candidates.find(
               (candidate: Candidate) => candidate.name === selectedCandidate
             )?.id,

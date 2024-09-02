@@ -48,6 +48,7 @@ export default function Component() {
   const [userData, setUserData] = useState<CustomJWTPayload | null>(null);
 
   useEffect(() => {
+    console.log("a")
     const cookieToken = getCookie('token');
     setToken(cookieToken);
 
@@ -61,7 +62,7 @@ export default function Component() {
     
     if (cookieToken) {
       checkAuth();
-      if (userData) {
+      if (userData?.role) {
         if (userData.role === 'ADMIN') {
           setIsAdmin(true);
         } else {
@@ -71,7 +72,7 @@ export default function Component() {
     } else {
       router.push('/login');
     }
-  }, [router, userData]);
+  }, [router, userData?.role]);
 
   useEffect(() => {
     const fetchData = async () => {

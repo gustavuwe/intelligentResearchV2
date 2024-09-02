@@ -15,7 +15,7 @@ import { registerVote } from './modules/vote/controllers/register'
 import { fetchVoters } from './modules/voter/controllers/fetch'
 import { findByName } from './modules/voter/controllers/findByName'
 import { registerVoter } from './modules/voter/controllers/register'
-import { updateVoter } from './modules/voter/controllers/update'
+// import { updateVoter } from './modules/voter/controllers/update'
 import { sendVote } from './modules/vote/controllers/sendVote'
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
@@ -42,12 +42,13 @@ const voterRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/register', registerVoter)
   fastify.get('/', fetchVoters)
   fastify.get('/findByName', findByName)
-  fastify.patch('/update/:id', updateVoter)
+  // fastify.patch('/update/:id', updateVoter)
 }
 
 const voteRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/register', registerVote)
   fastify.post('/sendVote', sendVote)
+  // fastify.patch('/update/:id', updateVote)
 }
 
 export const registerRoutes = async (app: FastifyInstance) => {
