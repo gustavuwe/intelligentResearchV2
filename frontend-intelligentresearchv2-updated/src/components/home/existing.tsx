@@ -1,3 +1,4 @@
+"use client";
 import { useResearches } from "@/api/research";
 import {
   Accordion,
@@ -7,7 +8,6 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { SettingsIcon } from "lucide-react";
 import { Loading } from "../loading";
 import { DialogAddNewVote } from "./dialog-add-new-vote";
 
@@ -38,33 +38,20 @@ export const Existing = () => {
             <Accordion type="single" collapsible className="w-full">
               {data?.researches?.map((research) => (
                 <AccordionItem value={research.id} key={research.id}>
-                  <AccordionTrigger>
-                    <div className="flex items-center justify-between w-full pr-4">
-                      <p>{research.title}</p>
-                      <SettingsIcon
-                        size={16}
-                        className="opacity-80 hover:opacity-40"
-                      />
-                    </div>
-                  </AccordionTrigger>
+                  <AccordionTrigger>{research.title}</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-2">
                       <p>
                         <strong>Data:</strong> {research.endDate}
                       </p>
                       <p className="truncate max-w-[230px]">
-                        <strong>Candidatos:</strong>{" "}
-                        {research.candidates.length > 0
-                          ? research.candidates
-                              .map((candidate) => candidate.name)
-                              .join(", ")
-                          : "Nenhum candidato"}
+                        <strong>{research.candidates.length}</strong> Candidatos{" "}
                       </p>
                       <p>
                         <strong>Quantidade de Votos:</strong>{" "}
                         {research.Vote.length}
                       </p>
-                      <DialogAddNewVote />
+                      <DialogAddNewVote researchID={research.id} />
                     </div>
                   </AccordionContent>
                 </AccordionItem>

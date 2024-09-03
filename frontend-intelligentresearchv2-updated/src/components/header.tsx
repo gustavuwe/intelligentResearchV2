@@ -1,3 +1,4 @@
+"use client";
 import { useLogout } from "@/api/auth";
 import { MegaphoneIcon, TrashIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";

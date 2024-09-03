@@ -1,3 +1,4 @@
+"use client";
 import { useLogout } from "@/api/auth";
 import { Button } from "@/components/ui/button";
 import {

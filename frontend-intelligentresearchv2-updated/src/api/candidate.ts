@@ -18,3 +18,4 @@ type CandidateResponse = {
 }
 
 export const useCandidates = () => useAPIQuery<CandidateResponse>('/candidate', { withCredentials: true })
+export const useCandidatesByResearchId = (researchId: string) => useAPIQuery<CandidateResponse>(`/candidate/findByResearchId/${researchId}`, { withCredentials: true })

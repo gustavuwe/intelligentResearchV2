@@ -1,17 +1,21 @@
-import * as L from 'leaflet';
-import 'leaflet.heat';
-import 'leaflet/dist/leaflet.css';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+"use client";
+import * as L from "leaflet";
+import "leaflet.heat";
+import "leaflet/dist/leaflet.css";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
-const HeatmapLayer: React.FC<{ points: any[]; intensity: number }> = ({ points, intensity }) => {
+const HeatmapLayer: React.FC<{ points: any[]; intensity: number }> = ({
+  points,
+  intensity,
+}) => {
   const map = useMap();
 
   useEffect(() => {
     const heatLayer = L.heatLayer(
-      points.map(p => [p.lat, p.lng, p.intensity * intensity]),
+      points.map((p) => [p.lat, p.lng, p.intensity * intensity]),
       { radius: 25, blur: 15, maxZoom: 17 }
     ).addTo(map);
 
@@ -47,14 +51,16 @@ const HeatmapSection: React.FC = () => {
         <HeatmapLayer points={points} intensity={intensity} />
       </MapContainer>
       <div className="mt-5">
-        <h3 className="text-lg font-medium mb-2">Ajustar Intensidade do Heatmap</h3>
+        <h3 className="text-lg font-medium mb-2">
+          Ajustar Intensidade do Heatmap
+        </h3>
         <Slider
           min={0.1}
           max={3}
           step={0.1}
           value={intensity}
           // @ts-ignore
-          onChange={value => setIntensity(value)}
+          onChange={(value) => setIntensity(value)}
         />
       </div>
     </div>

@@ -12,6 +12,13 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Textarea } from "../ui/textarea";
 
 export const CreateNewResearch = () => {
@@ -27,6 +34,7 @@ export const CreateNewResearch = () => {
       date: "",
       description: "",
       title: "",
+      kind: "vereador",
     },
   });
 
@@ -38,6 +46,7 @@ export const CreateNewResearch = () => {
       startDate: getCurrentDate(),
       endDate: values.date,
       description: values.description,
+      kind: values.kind,
     });
 
     if (response?.error) {
@@ -102,6 +111,26 @@ export const CreateNewResearch = () => {
                       placeholder="Nome da pesquisa"
                       {...field}
                     />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="kind"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Alvo</FormLabel>
+                  <FormControl>
+                    <Select {...field}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecionar alvo da pesquisa"></SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="vereador">Vereador</SelectItem>
+                        <SelectItem value="prefeito">Prefeito</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormItem>
               )}
