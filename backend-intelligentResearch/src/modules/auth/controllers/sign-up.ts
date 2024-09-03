@@ -22,6 +22,7 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
       })
       .send({
         sub: user.id,
+        role: user.role,
       })
 
     return reply.status(200).send({ token })
