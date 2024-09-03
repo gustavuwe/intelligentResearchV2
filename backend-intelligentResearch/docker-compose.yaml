@@ -1,17 +1,50 @@
-services:
+# services:
 
-  postgresql:
-    env_file:
-      - path: ./.env
-    image: bitnami/postgresql:latest
+#   postgresql:
+#     env_file:
+#       - path: ./.env
+#     image: bitnami/postgresql:latest
+#     ports:
+#       - 5432:5432
+#     environment:
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#       - POSTGRES_DB=${POSTGRES_DB}
+#     volumes:
+#       - ./pgdata:/data/postgres
+
+# volumes:
+#   postgresql_data:
+
+version: '3.8'
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:v23.1.0
+    container_name: cockroachdb
+    command: start-single-node --insecure
     ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - "5432:5432"
+      - "8080:8080"
     volumes:
-      - ./pgdata:/data/postgres
+      - cockroach-data:/cockroach/cockroach-data
+    environment:
+      - COCKROACH_DATABASE=${COCKROACH_DATABASE}
+      - COCKROACH_USER=${COCKROACH_USER}
+      - COCKROACH_PASSWORD=${COCKROACH_PASSWORD}
+    entrypoint:
+      - /bin/bash
+      - -c
+      - >
+        /cockroach/cockroach sql --insecure --execute="
+          CREATE DATABASE IF NOT EXISTS intelligent_research;
+          CREATE USER IF NOT EXISTS admin WITH PASSWORD 'admin';
+          GRANT ALL ON DATABASE intelligent_research TO admin;
+        "
+    healthcheck:
+      test: ["CMD", "cockroach", "sql", "--insecure", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  postgresql_data:
+  cockroach-data:
