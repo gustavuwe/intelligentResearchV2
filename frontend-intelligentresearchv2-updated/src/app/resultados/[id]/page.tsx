@@ -19,7 +19,7 @@ import {
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
 import axios from "axios";
-import { Menu } from "lucide-react";
+import { HomeIcon, Menu } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -28,6 +28,7 @@ import L from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import Link from "next/link";
 
 declare global {
   interface Window {
@@ -74,11 +75,6 @@ const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number
   const heatLayerRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log("HeatmapLayer useEffect called");
-    console.log("Map:", map);
-    console.log("Data:", data);
-    console.log("Intensity:", intensity);
-
     if (!map) return;
 
     // Remove o heatmap antigo, se houver
@@ -237,7 +233,7 @@ export default function Component() {
     setHeatmapData2(allLocations)
     
     
-  }, [fullCandidatesData, selectedCandidate, heatmapData2])
+  }, [fullCandidatesData, selectedCandidate])
 
   if (isLoading || !isMounted) {
     return <Loading />;
@@ -274,7 +270,7 @@ export default function Component() {
 
       {/* Hamburger Menu for Mobile */}
       <div className="md:hidden">
-        <Sheet>
+        <Sheet onOpenChange={setIsAsideOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" className="p-2" onClick={() => setIsAsideOpen(true)}>
               <Menu className="h-6 w-6" />
@@ -299,6 +295,16 @@ export default function Component() {
                 </Button>
                 </SheetClose>
               ))}
+              <SheetClose asChild className="mt-[220px] text-center">
+                <Button
+                  className="gap-2 justify-start w-full"
+                  variant="default"
+                >
+                  <Link href="/home" className="flex flex-row gap-2">
+                    <HomeIcon size={18}/> Home
+                  </Link>
+                </Button>
+              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>
@@ -364,7 +370,7 @@ export default function Component() {
       </div>
       </div>
     </section> */}
-    <section className="mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden">
+    <section className={`mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden ${isAsideOpen === true ? "hidden" : ""}`}>
   <div className="py-12 px-6 md:px-12">
     <h1 className="font-bold text-4xl md:text-6xl text-center tracking-tight text-gray-800 mb-8">
       Heatmap

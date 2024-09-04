@@ -93,7 +93,10 @@ export default function Component() {
               className={`cursor-pointer transition-all hover:shadow-md ${
                 selectedCard === index ? "ring-2 ring-primary" : ""
               }`}
-              onClick={() => setSelectedCard(index)}
+              onClick={() => {
+                setSelectedCard(index)
+                setIsLoading(true)
+              }}
             >
               <Link href={`/resultados/${card.id}`}>
                 <CardHeader>
