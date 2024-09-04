@@ -85,7 +85,7 @@ export default function Component() {
                       className="gap-2 justify-start"
                       variant="outline"
                     >
-                      <Link href="/login" className="flex flex-row gap-2">
+                      <Link href="/home" className="flex flex-row gap-2">
                         <LogInIcon size={18}/> Entrar
                       </Link>
                     </Button>
@@ -120,7 +120,7 @@ export default function Component() {
                 Comece a Explorar
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
-              <p className="pt-2">Já é cliente? <Link href="/login" className="bg-yellow-400 px-3 py-[3px] rounded-md text-black font-bold hover:px-[20px] transition-all">Entre</Link></p>
+              <p className="pt-2">Já é cliente? <Link href="/home" className="bg-yellow-400 px-3 py-[3px] rounded-md text-black font-bold hover:px-[20px] transition-all">Entre</Link></p>
             </div>
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
