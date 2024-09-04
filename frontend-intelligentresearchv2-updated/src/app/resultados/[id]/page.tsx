@@ -295,9 +295,9 @@ export default function Component() {
                 </Button>
                 </SheetClose>
               ))}
-              <SheetClose asChild className="mt-[220px] text-center">
+              <SheetClose asChild className="text-center">
                 <Button
-                  className="gap-2 justify-start w-full"
+                  className="gap-2 justify-start w-full bg-gray-600"
                   variant="default"
                 >
                   <Link href="/home" className="flex flex-row gap-2">

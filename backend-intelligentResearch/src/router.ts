@@ -17,11 +17,13 @@ import { findByName } from './modules/voter/controllers/findByName'
 import { registerVoter } from './modules/voter/controllers/register'
 // import { updateVoter } from './modules/voter/controllers/update'
 import { sendVote } from './modules/vote/controllers/sendVote'
+import { refresh } from './modules/auth/controllers/refresh'
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/sign-in', signIn)
   fastify.post('/sign-up', signUp)
   fastify.post('/logout', logout)
+  fastify.post('/refreshToken', refresh)
 }
 
 const researchRoutes: FastifyPluginAsync = async (fastify) => {

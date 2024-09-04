@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { signUpSchema } from '../schemas/sign-up'
 import * as service from '../services'
-import { signJWT } from '../services/jwt'
+import { generateTokens } from '../services/jwt'
 
 export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
   // zod to validate the request body
@@ -11,10 +11,17 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
   }
   try {
     const user = await service.signUp(data.data)
-    const token = signJWT(user)
+    // const token = signJWT(user)
+    const { accessToken, refreshToken } = generateTokens(user)
 
     reply
-      .setCookie('token', token, {
+      .setCookie('token', accessToken, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      })
+      .setCookie('refreshToken', refreshToken, {
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -25,7 +32,7 @@ export const signUp = async (request: FastifyRequest, reply: FastifyReply) => {
         role: user.role,
       })
 
-    return reply.status(200).send({ token })
+    return reply.status(200).send({ accessToken, refreshToken })
   } catch (err) {
     return reply.status(500).send(err)
   }
