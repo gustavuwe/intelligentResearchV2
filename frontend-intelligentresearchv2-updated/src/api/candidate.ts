@@ -1,6 +1,6 @@
 "use client";
 
-import { useAPIQuery } from "@/hooks/useApi";
+import { useAPIMutation, useAPIQuery } from "@/hooks/useApi";
 import { Vote } from "./Vote";
 
 export type Candidate = {
@@ -18,4 +18,7 @@ type CandidateResponse = {
 }
 
 export const useCandidates = () => useAPIQuery<CandidateResponse>('/candidate', { withCredentials: true })
+
+export const useCreateCandidate = (researchId: string) => useAPIMutation<CandidateResponse>(`/candidate/register`, 'post', { withCredentials: true })
+
 export const useCandidatesByResearchId = (researchId: string) => useAPIQuery<CandidateResponse>(`/candidate/findByResearchId/${researchId}`, { withCredentials: true })

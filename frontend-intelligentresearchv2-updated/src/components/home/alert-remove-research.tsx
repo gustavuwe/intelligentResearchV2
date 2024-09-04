@@ -11,6 +11,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Button } from "@/components/ui/button"
+import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
    
   export function AlertDialogRemoveResearch({ researchID }: { researchID: string }) {
@@ -37,7 +38,10 @@ import { toast } from "sonner";
     <>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full">Excluir Pesquisa</Button>
+              <Button variant="destructive" className="w-full">
+              <TrashIcon className="h-4 w-4 mr-2" />
+                Excluir Pesquisa
+                </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -48,7 +52,9 @@ import { toast } from "sonner";
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction className="bg-red-500" onClick={() => handleRemoveResearch()}>Continuar</AlertDialogAction>
+                <AlertDialogAction className="bg-red-500" onClick={() => handleRemoveResearch()}>
+                    Continuar
+                    </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

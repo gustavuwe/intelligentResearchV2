@@ -11,6 +11,7 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Loading } from "../loading";
 import { DialogAddNewVote } from "./dialog-add-new-vote";
 import { AlertDialogRemoveResearch } from "./alert-remove-research";
+import { DialogAddNewCandidate } from "./dialog-add-new-candidate";
 
 export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
   const { data, error, isLoading } = useResearches();
@@ -53,6 +54,7 @@ export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
                         {research.Vote.length}
                       </p>
                       <DialogAddNewVote researchID={research.id} />
+                      <DialogAddNewCandidate researchID={research.id} />
                       {isAdmin && (
                         <AlertDialogRemoveResearch researchID={research.id} />
                       )}

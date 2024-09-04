@@ -1,4 +1,5 @@
 "use client";
+
 import * as L from "leaflet";
 import "leaflet.heat";
 import "leaflet/dist/leaflet.css";
