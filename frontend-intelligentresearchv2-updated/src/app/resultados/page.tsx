@@ -40,7 +40,6 @@ export default function Component() {
   const [userData, setUserData] = useState<CustomJWTPayload | null>(null);
 
   useEffect(() => {
-    console.log("a")
     const cookieToken = getCookie('token');
     setToken(cookieToken);
 
@@ -87,7 +86,7 @@ export default function Component() {
         Selecione uma pesquisa para ver os gráficos e análises detalhados.
       </p>
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
           {researches.map((card, index) => (
             <Card
               key={index}

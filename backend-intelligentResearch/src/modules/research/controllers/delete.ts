@@ -1,19 +1,14 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { deleteResearchSchema } from '../schemas/delete'
 import * as service from '../services'
 
 export const deleteResearch = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-  const data = deleteResearchSchema.safeParse(request.body)
-
-  if (!data.success) {
-    return reply.status(400).send(data.error)
-  }
+  const { id } = request.params as { id: string }
 
   try {
-    await service.deleteResearch(data.data)
+    await service.deleteResearch(id)
   } catch (err) {
     return reply.status(500).send(err)
   }

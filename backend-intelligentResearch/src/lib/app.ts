@@ -10,7 +10,8 @@ export const app = Fastify()
 
 app.register(cors, {
   // allow all origins
-  origin: true,
+  // origin: true,
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

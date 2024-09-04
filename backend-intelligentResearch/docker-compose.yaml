@@ -1,17 +1,34 @@
-services:
+# services:
 
-  postgresql:
-    env_file:
-      - path: ./.env
-    image: bitnami/postgresql:latest
+#   postgresql:
+#     env_file:
+#       - path: ./.env
+#     image: bitnami/postgresql:latest
+#     ports:
+#       - 5432:5432
+#     environment:
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#       - POSTGRES_DB=${POSTGRES_DB}
+#     volumes:
+#       - ./pgdata:/data/postgres
+
+# volumes:
+#   postgresql_data:
+
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:v22.2.0
+    command: start-single-node --insecure
     ports:
-      - 5432:5432
+      - 26257:26257
+      - 8080:8080
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - COCKROACH_USER=${POSTGRES_USER}
+      - COCKROACH_PASSWORD=${POSTGRES_PASSWORD}
+      - COCKROACH_DB=${POSTGRES_DB}
     volumes:
-      - ./pgdata:/data/postgres
+      - ./cockroach-data:/cockroach/cockroach-data
 
 volumes:
-  postgresql_data:
+  cockroach_data:

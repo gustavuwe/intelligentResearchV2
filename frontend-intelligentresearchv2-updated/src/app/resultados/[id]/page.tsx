@@ -27,7 +27,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import 'leaflet.heat';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-// @ts-ignore
 import L from 'leaflet';
 
 declare global {

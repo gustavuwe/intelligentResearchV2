@@ -33,7 +33,7 @@ export default function HomePage() {
 
           <div className="grid gap-6 md:grid-cols-2">
             {isAdmin && <CreateNewResearch />}
-            <Existing />
+            <Existing isAdmin={isAdmin} />
           </div>
         </div>
       </div>

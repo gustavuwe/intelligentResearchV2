@@ -32,7 +32,6 @@ const HeatmapSection: React.FC = () => {
     { lat: 37.7749, lng: -122.4194, intensity: 0.5 },
     { lat: 37.7849, lng: -122.4294, intensity: 0.6 },
     { lat: 37.7649, lng: -122.4094, intensity: 0.7 },
-    // Adicione mais pontos conforme necessário
   ];
 
   const [intensity, setIntensity] = useState<number>(1);

@@ -10,8 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Loading } from "../loading";
 import { DialogAddNewVote } from "./dialog-add-new-vote";
+import { AlertDialogRemoveResearch } from "./alert-remove-research";
 
-export const Existing = () => {
+export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
   const { data, error, isLoading } = useResearches();
 
   if (isLoading || error) {
@@ -52,6 +53,9 @@ export const Existing = () => {
                         {research.Vote.length}
                       </p>
                       <DialogAddNewVote researchID={research.id} />
+                      {isAdmin && (
+                        <AlertDialogRemoveResearch researchID={research.id} />
+                      )}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

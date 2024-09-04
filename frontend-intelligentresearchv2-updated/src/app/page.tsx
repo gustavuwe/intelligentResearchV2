@@ -19,7 +19,6 @@ export default function Component() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    console.log(process.env.NEXT_PUBLIC_API_URL)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 

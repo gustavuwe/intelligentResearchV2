@@ -27,7 +27,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
 const researchRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/register', register)
   fastify.put('/update', update)
-  fastify.delete('/delete', deleteResearch)
+  fastify.delete('/delete/:id', deleteResearch)
   fastify.get('/', fetchResearches)
 }
 
