@@ -9,7 +9,8 @@ export const sendVote = async (data: SendVoteSchema) => {
     throw new Error('Invalid data')
   }
 
-  const { voterName, candidateName, researchId, lat, long } = parsedData.data
+  const { voterName, phoneNumber, candidateId, researchId, lat, long, Vote } =
+    parsedData.data
 
   async function getNeighborhood(latitude: string, longitude: string) {
     const apiKey = env.GOOGLE_API_KEY
@@ -34,26 +35,40 @@ export const sendVote = async (data: SendVoteSchema) => {
     }
   }
 
+  const createVoter = await prisma.voter.create({
+    data: {
+      name: voterName,
+      phoneNumber,
+      Candidate: {
+        connect: {
+          id: candidateId,
+        },
+      },
+      Vote: {
+        create: Vote.map((vote) => ({
+          id: vote.id,
+          voterId: vote.voterId,
+          candidateId: vote.candidateId,
+          researchId: vote.researchId,
+        })),
+      },
+    },
+  })
+
   const selectedVoter = await prisma.voter.findFirst({
     where: {
-      name: voterName,
+      name: createVoter.name,
     },
   })
 
-  const selectedCandidate = await prisma.candidate.findFirst({
-    where: {
-      name: candidateName,
-    },
-  })
-
-  if (!selectedVoter || !selectedCandidate) {
-    throw new Error('Voter or Candidate not found')
+  if (!selectedVoter) {
+    throw new Error('Voter not found')
   }
 
   await prisma.vote.create({
     data: {
       voterId: selectedVoter.id,
-      candidateId: selectedCandidate.id,
+      candidateId,
       researchId,
       neighborhood: await getNeighborhood(lat, long),
       lat,

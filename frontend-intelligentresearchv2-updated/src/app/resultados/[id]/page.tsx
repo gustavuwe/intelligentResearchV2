@@ -24,10 +24,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
+import L from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import L from 'leaflet';
 
 declare global {
   interface Window {
@@ -316,8 +316,8 @@ export default function Component() {
               <BarChart
                 data={selectedCandidate.data}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                width={500} // You can adjust or remove the width to make it responsive
-                height={300} // Adjust the height as needed
+                width={500}
+                height={300}
               >
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="neighborhood" tickLine={false} tickMargin={10} axisLine={false} />
@@ -334,7 +334,7 @@ export default function Component() {
         </Card>
       </main>
     </div>
-    <section className={`mt-[120px] md:mt-[400px] min-h-[1000px] rounded-lg overflow-hidden`}>
+    {/* <section className={`mt-[120px] md:mt-[400px] min-h-[1000px] rounded-lg overflow-hidden`}>
       <h1 className="font-bold text-6xl text-center text-tracking-tight">Heatmap</h1>
       <div className="w-full space-y-4">
       <div className="mt-4 h-[500px] rounded-lg overflow-hidden shadow-lg">
@@ -363,7 +363,50 @@ export default function Component() {
         <span className="text-sm font-medium text-gray-700 w-8 text-right">{intensity.toFixed(1)}</span>
       </div>
       </div>
-    </section>
+    </section> */}
+    <section className="mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden">
+  <div className="py-12 px-6 md:px-12">
+    <h1 className="font-bold text-4xl md:text-6xl text-center tracking-tight text-gray-800 mb-8">
+      Heatmap
+    </h1>
+    <div className="w-full space-y-6">
+      <div className="h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
+        <MapContainer
+          center={[-6.262768, -36.514487]}
+          zoom={14}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <HeatmapLayer data={heatmapData2} intensity={intensity} />
+        </MapContainer>
+      </div>
+      <div className="flex items-center justify-center space-x-6 mt-6">
+        <label
+          htmlFor="intensity-slider"
+          className="text-sm font-medium text-gray-700"
+        >
+          Intensidade:
+        </label>
+        <input
+          id="intensity-slider"
+          type="range"
+          min="0.2"
+          max="10"
+          step="0.2"
+          value={intensity}
+          onChange={(e) => setIntensity(parseFloat(e.target.value))}
+          className="w-3/4 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+        />
+        <span className="text-sm font-medium text-gray-700 w-12 text-right">
+          {intensity.toFixed(1)}
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
     </>
   );
 }

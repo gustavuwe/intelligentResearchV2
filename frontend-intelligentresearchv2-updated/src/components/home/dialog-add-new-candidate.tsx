@@ -34,7 +34,7 @@ import { useState } from "react";
 export const DialogAddNewCandidate = ({ researchID }: { researchID: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const {  mutate: createCandidate, isLoading, revalidateQuery } = useCreateCandidate(researchID);
+  const { mutate: createCandidate, isLoading, revalidateQuery } = useCreateCandidate(researchID);
 
   const form = useForm<CreateCandidateFormSchema>({
     resolver: zodResolver(createCandidateFormSchema),

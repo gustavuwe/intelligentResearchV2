@@ -122,7 +122,7 @@ export const CreateNewResearch = () => {
                 <FormItem className="w-full">
                   <FormLabel>Alvo</FormLabel>
                   <FormControl>
-                    <Select {...field}>
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecionar alvo da pesquisa"></SelectValue>
                       </SelectTrigger>
