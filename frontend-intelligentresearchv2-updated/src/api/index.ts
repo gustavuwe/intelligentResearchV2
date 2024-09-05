@@ -8,32 +8,70 @@ export const api = axios.create({
   },
 })
 
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (token) {
+      prom.resolve(token);
+    } else {
+      prom.reject(error);
+    }
+  });
+
+  failedQueue = [];
+};
+
+// Interceptor para lidar com respostas de erro
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response, // Retorna a resposta normalmente se não houver erro
   async (error) => {
     const originalRequest = error.config;
 
-    // Verifica se o erro é 401 e se a requisição não é para a rota de refresh
+    // Verifica se o erro é 401 e a requisição não é para a rota de refresh
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
+      // Se já houver um refresh em andamento, adiciona a requisição à fila
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => {
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
+      isRefreshing = true;
+
       try {
-        // Tenta obter um novo accessToken
+        // Faz a requisição para o refresh token
         const refreshResponse = await api.post('/auth/refresh');
-        
+
         if (refreshResponse.status === 200) {
-          // Atualiza o token no originalRequest e tenta novamente
-          axios.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.accessToken}`;
+          // Após o refresh, todas as requisições na fila são executadas
+          processQueue(null);
+
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Se o refresh falhar, redireciona para o login ou toma outra ação
+        // Se o refresh falhar, rejeita as requisições na fila
+        processQueue(refreshError, null);
+
+        // Redireciona para a página de login ou toma outra ação apropriada
         console.error('Refresh token failed:', refreshError);
-        // Redirecionar para login ou mostrar mensagem de erro
+        // window.location.href = '/login'; // Redireciona para login, se necessário
+
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
-    // Se não for um erro de autenticação, rejeita a promessa
     return Promise.reject(error);
   }
 );

@@ -9,8 +9,8 @@ export const signJWT = (user: User, expiresIn: string) =>
   })
 
 export const generateTokens = (user: User) => {
-  const accessToken = signJWT(user, '15m')
-  const refreshToken = signJWT(user, '1m')
+  const accessToken = signJWT(user, '1d')
+  const refreshToken = signJWT(user, '7d')
 
   return { accessToken, refreshToken }
 }

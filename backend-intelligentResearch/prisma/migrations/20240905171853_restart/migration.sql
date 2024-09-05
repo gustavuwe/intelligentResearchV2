@@ -19,6 +19,7 @@ CREATE TABLE "Research" (
     "title" STRING NOT NULL,
     "startDate" STRING NOT NULL,
     "endDate" STRING NOT NULL,
+    "creatorId" STRING NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -63,11 +64,25 @@ CREATE TABLE "Candidate" (
     CONSTRAINT "Candidate_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Employee" (
+    "id" STRING NOT NULL,
+    "userId" STRING NOT NULL,
+    "researchId" STRING NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Employee_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Candidate_name_key" ON "Candidate"("name");
+
+-- AddForeignKey
+ALTER TABLE "Research" ADD CONSTRAINT "Research_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Voter" ADD CONSTRAINT "Voter_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -83,3 +98,9 @@ ALTER TABLE "Vote" ADD CONSTRAINT "Vote_researchId_fkey" FOREIGN KEY ("researchI
 
 -- AddForeignKey
 ALTER TABLE "Candidate" ADD CONSTRAINT "Candidate_researchId_fkey" FOREIGN KEY ("researchId") REFERENCES "Research"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_researchId_fkey" FOREIGN KEY ("researchId") REFERENCES "Research"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

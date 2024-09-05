@@ -16,12 +16,20 @@ export const Header = ({ isAdmin }: { isAdmin: boolean }) => {
       <nav className="hidden md:block">
         <ul className="flex flex-row gap-3">
           {isAdmin && (
-            <Button variant="default">
-              <Link href="/resultados" className="flex justify-between">
-                <UsersIcon className="h-4 w-4 mr-2" />
-                Dados das pesquisas
-              </Link>
-            </Button>
+            <>
+              <Button variant="default">
+                <Link href="/resultados" className="flex justify-between">
+                  <UsersIcon className="h-4 w-4 mr-2" />
+                  Dados das pesquisas
+                </Link>
+              </Button>
+              <Button variant="outline">
+                <Link href="/registrar-funcionario" className="flex justify-between">
+                  <UsersIcon className="h-4 w-4 mr-2" />
+                  Registrar funcionário
+                </Link>
+              </Button>
+            </>
           )}
           <Button variant="outline">
             <Link href="/reportar" className="flex justify-between">

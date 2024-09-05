@@ -5,6 +5,7 @@ export const createResearchFormSchema = z.object({
   description: z.string().optional(),
   date: z.string(),
   kind: z.enum(["prefeito", "vereador"]),
+  creatorId: z.string(),
 })
 
 export type CreateResearchFormSchema = z.infer<typeof createResearchFormSchema>;

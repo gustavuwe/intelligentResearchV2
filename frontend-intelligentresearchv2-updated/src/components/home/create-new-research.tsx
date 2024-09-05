@@ -20,8 +20,12 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { useEffect, useState } from "react";
+import { verifyJWT } from "@/utils/jwtVerification";
 
 export const CreateNewResearch = () => {
+  const [creatorId, setCreatorId] = useState<string>("");
+
   const {
     mutate: createResearch,
     isLoading,
@@ -38,6 +42,14 @@ export const CreateNewResearch = () => {
     },
   });
 
+  useEffect(() => {
+    const payload = verifyJWT();
+
+    if (payload) {
+      setCreatorId(payload.sub);
+    }
+  }, [creatorId])
+
   const handleSubmit = async (values: CreateResearchFormSchema) => {
     const response = await createResearch({
       title: values.title,
@@ -47,6 +59,7 @@ export const CreateNewResearch = () => {
       endDate: values.date,
       description: values.description,
       kind: values.kind,
+      creatorId: creatorId,
     });
 
     if (response?.error) {

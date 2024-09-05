@@ -13,12 +13,25 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String     @id @default(uuid())
+  username   String     @unique
+  password   String
+  role       Role       @default(USER)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  researches Research[] @relation("CreatedResearches")
+  employees  Employee[] @relation("EmployerEmployees")
+  Employee   Employee[]
+}
+
+model Employee {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String // id do funcionario
+  employer   User     @relation("EmployerEmployees", fields: [employerId], references: [id], onDelete: Cascade) // Relacionamento com o empregador (criador das pesquisas)
+  employerId String // id do empregador (criador das pesquisas)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Research {
@@ -27,6 +40,8 @@ model Research {
   startDate  String
   endDate    String
   candidates Candidate[]
+  creator    User        @relation(fields: [creatorId], references: [id], name: "CreatedResearches", onDelete: Cascade)
+  creatorId  String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   Vote       Vote[]
