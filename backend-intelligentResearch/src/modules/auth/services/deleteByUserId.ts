@@ -1,35 +1,17 @@
 import { prisma } from '@/lib/prisma'
 
 export const deleteByUserId = async (id: string) => {
-  //   await prisma.employee.deleteMany({
-  //     where: {
-  //       employerId: id,
-  //       userId: id,
-  //     },
-  //   })
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
 
-  //   await prisma.research.deleteMany({
-  //     where: {
-  //       creatorId: id,
-  //     },
-  //   })
-  await prisma.$transaction(async (prisma) => {
-    await prisma.employee.deleteMany({
-      where: {
-        employerId: id,
-      },
-    })
+  if (!user) {
+    throw new Error('Usuário não encontrado.')
+  }
 
-    await prisma.research.deleteMany({
-      where: {
-        creatorId: id,
-      },
-    })
-
-    await prisma.user.delete({
-      where: {
-        id,
-      },
-    })
+  return await prisma.user.delete({
+    where: { id },
   })
 }

@@ -27,12 +27,6 @@ type EmployeeResponse = {
   };
 };
 
-type EmployeeUsernamesResponse = {
-    employees: {
-        employeesUsernames: usernames[];
-    }
-}
-
 export const useRegisterEmployee = () =>
   useAPIMutation<EmployeeResponse>(`/employee/register-employee`, "post", {
     withCredentials: true,
