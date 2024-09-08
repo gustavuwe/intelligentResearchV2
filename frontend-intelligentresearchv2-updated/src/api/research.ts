@@ -16,6 +16,8 @@ type ResearchResponse = {
 }
 export const useResearches = () => useAPIQuery<ResearchResponse>('/research', { withCredentials: true })
 
+export const useResearchesByCreatorId = (creatorId: string) => useAPIQuery<ResearchResponse>(`/research/creator/${creatorId}`, { withCredentials: true })
+
 export const useCreateResearch = () => useAPIMutation<ResearchResponse>('/research/register', 'post', { withCredentials: true })
 
 export const useRemoveResearch = (researchID: string) => useAPIMutation<ResearchResponse>(`/research/delete/${researchID}`, 'delete', { withCredentials: true })

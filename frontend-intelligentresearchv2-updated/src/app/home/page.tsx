@@ -10,13 +10,27 @@ import { MobileHeader } from "@/components/mobile-header";
 
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { Toaster } from "sonner";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const router = useRouter();
   const { authenticated, isAdmin } = useAuthentication();
+  const [isMounted, setIsMounted] = useState(false);
 
-  if (!authenticated) {
-    router.push("/login");
+  // if (!authenticated) {
+  //   router.push("/login");
+  // }
+
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/login");
+    } else {
+      setIsMounted(true);  // Indicates that component has been mounted
+    }
+  }, [authenticated, router]);
+
+  if (!isMounted) {
+    return null;  // Avoid rendering anything until the component is mounted
   }
 
   return (

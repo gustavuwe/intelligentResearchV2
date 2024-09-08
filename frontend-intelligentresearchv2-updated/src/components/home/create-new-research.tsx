@@ -48,9 +48,10 @@ export const CreateNewResearch = () => {
     if (payload) {
       setCreatorId(payload.sub);
     }
-  }, [creatorId])
+  }, [])
 
   const handleSubmit = async (values: CreateResearchFormSchema) => {
+    console.log("chegou aqui por ex")
     const response = await createResearch({
       title: values.title,
       candidates: [],
@@ -59,7 +60,7 @@ export const CreateNewResearch = () => {
       endDate: values.date,
       description: values.description,
       kind: values.kind,
-      creatorId: creatorId,
+      creatorId: creatorId || "",
     });
 
     if (response?.error) {
