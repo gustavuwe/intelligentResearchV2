@@ -8,7 +8,7 @@ export const useSignIn = () =>
 
 export const useLogout = () => useAPIMutation<LogoutResponse>('/auth/logout', 'post', { withCredentials: true })
 
-export const useDeleteByUserId = (userId: string) => useAPIMutation<DeleteResponse>(`/auth/delete/${userId}`, 'delete', {
+export const useDeleteByUserId = (id: string) => useAPIMutation<DeleteResponse>(`/auth/delete/${id}`, 'delete', {
   headers: {
     'Content-Type': 'application/json',
   },

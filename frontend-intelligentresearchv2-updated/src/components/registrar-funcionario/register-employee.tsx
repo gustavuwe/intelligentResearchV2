@@ -90,25 +90,35 @@ export default function EmployeeRegistration() {
       employerId: employerId || "",
     });
 
+    console.log(response?.data)
+    console.log(employeesData)
+
     if (response?.error) {
       return toast.error("Houve um erro ao tentar registrar o funcionário");
     }
 
+    // @ts-ignore
+    setEmployeesData(prevEmployeesData => [
+      ...prevEmployeesData,
+      response?.data?.employee,
+    ])
+
     setIsSubmitting(false);
-    toast.success("Funcionário registrado com sucesso!");
-    revalidateQuery("/employee");
+    return toast.success("Funcionário registrado com sucesso!");
   };
 
   const removeEmployee = async (id: string) => {
     console.log(id)
-    const response = await deleteByUserId(id);
+    // const response = await deleteByUserId(id);
+    const response = await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/delete/${id}`);
 
-    if (response?.error) {
+    if (response.status !== 200) {
       return toast.error("Aconteceu um erro ao tentar excluir o funcionário");
     }
 
-    revalidateQuery("/employee");
-    toast.success("Funcionário excluído com sucesso!");
+    setEmployeesData(prevEmployeesData => prevEmployeesData.filter(employee => employee.user.id !== id))
+
+    return toast.success("Funcionário excluído com sucesso!");
   }
 
   return (

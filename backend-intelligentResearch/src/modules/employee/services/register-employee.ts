@@ -18,7 +18,7 @@ export const registerEmployee = async (data: RegisterEmployeeSchema) => {
     },
   })
 
-  await prisma.employee.create({
+  const employee = await prisma.employee.create({
     data: {
       user: {
         connect: {
@@ -31,5 +31,17 @@ export const registerEmployee = async (data: RegisterEmployeeSchema) => {
         },
       },
     },
+    select: {
+      id: true,
+    },
   })
+
+  return {
+    id: userId.id,
+    user: {
+      id: employee.id,
+      username: parsedData.username,
+    },
+    employerId: parsedData.employerId,
+  }
 }

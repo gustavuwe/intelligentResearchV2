@@ -6,7 +6,11 @@ import { ZodError } from 'zod'
 import { registerRoutes } from '../router'
 import { env } from './env'
 
-export const app = Fastify()
+export const app = Fastify({
+  logger: {
+    level: 'debug',
+  },
+})
 
 app.register(cors, {
   // allow all origins

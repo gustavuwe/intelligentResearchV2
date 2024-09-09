@@ -1,17 +1,17 @@
-import { Candidate } from '@prisma/client'
+import { Candidate, type User } from '@prisma/client'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import * as service from '../services'
 
 export const deleteByUserId = async (
   request: FastifyRequest,
   reply: FastifyReply,
-): Promise<Candidate[]> => {
+): Promise<User[]> => {
   try {
     const { id } = request.params as { id: string }
 
-    const candidates = await service.deleteByUserId(id)
+    const response = await service.deleteByUserId(id)
 
-    return reply.status(200).send({ candidates })
+    return reply.status(200).send({ response })
   } catch (err) {
     return reply.status(500).send(err)
   }

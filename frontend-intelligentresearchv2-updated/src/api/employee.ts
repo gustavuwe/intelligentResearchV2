@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export type Employee = {
   id?: string;
-  username: string;
+  // username: string;
   employerId: string;
   user: {
     id?: string;
@@ -27,8 +27,12 @@ type EmployeeResponse = {
   };
 };
 
+type RegisterEmployeeResponse = {
+  employee: Employee;
+}
+
 export const useRegisterEmployee = () =>
-  useAPIMutation<EmployeeResponse>(`/employee/register-employee`, "post", {
+  useAPIMutation<RegisterEmployeeResponse>(`/employee/register-employee`, "post", {
     withCredentials: true,
   });
 

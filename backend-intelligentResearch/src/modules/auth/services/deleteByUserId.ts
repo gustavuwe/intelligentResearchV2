@@ -8,10 +8,10 @@ export const deleteByUserId = async (id: string) => {
   })
 
   if (!user) {
-    throw new Error('Usuário não encontrado.')
+    throw new Error(`id: ${id}`)
   }
 
-  return await prisma.user.delete({
+  await prisma.user.delete({
     where: { id },
   })
 }

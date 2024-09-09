@@ -12,10 +12,10 @@ export const registerEmployee = async (
     return reply.status(400).send(data.error)
   }
   try {
-    const user = await service.registerEmployee(data.data)
+    const employee = await service.registerEmployee(data.data)
     // const token = signJWT(user)
 
-    return reply.status(200).send({ user })
+    return reply.status(200).send({ employee })
   } catch (err) {
     return reply.status(500).send(err)
   }
