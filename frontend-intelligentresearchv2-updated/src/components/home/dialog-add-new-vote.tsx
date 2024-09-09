@@ -49,6 +49,7 @@ export const DialogAddNewVote = ({ researchID }: { researchID: string }) => {
   });
 
   useEffect(() => {
+    console.log(data)
     navigator.geolocation.getCurrentPosition((position) => {
       setLatitude(position.coords.latitude.toString());
       setLongitude(position.coords.longitude.toString());
