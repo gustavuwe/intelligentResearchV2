@@ -1,10 +1,10 @@
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { signInSchema } from '../schemas/sign-in'
 import * as service from '../services'
-import { signJWT } from '../services/jwt'
+import { generateTokens } from '../services/jwt'
 
 export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
-  // zod to validate the request body
   const data = signInSchema.safeParse(request.body)
   if (!data.success) {
     return reply.status(400).send(data.error)
@@ -15,9 +15,15 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
       return reply.status(404).send({ message: 'User not found.' })
     }
 
-    const token = signJWT(user)
+    const { accessToken, refreshToken } = generateTokens(user)
     reply
-      .setCookie('token', token, {
+      .setCookie('token', accessToken, {
+        path: '/',
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      })
+      .setCookie('refreshToken', refreshToken, {
         path: '/',
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
@@ -25,10 +31,18 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
       })
       .send({
         sub: user.id,
+        role: user.role,
       })
 
     return reply.status(200).send()
   } catch (err) {
+    console.error(err)
+
+    if (err instanceof PrismaClientKnownRequestError) {
+      if (err.code === 'P2025') {
+        return reply.status(404).send({ message: 'User not found.' })
+      }
+    }
     return reply.status(500).send(err)
   }
 }

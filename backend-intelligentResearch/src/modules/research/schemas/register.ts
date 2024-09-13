@@ -22,6 +22,7 @@ export const registerResearchSchema = z.object({
   startDate: z.string(),
   endDate: z.string(),
   candidates: z.array(CandidateSchema),
+  creatorId: z.string(),
   Vote: z.array(VoteSchema),
 })
 

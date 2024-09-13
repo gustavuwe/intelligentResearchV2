@@ -17,18 +17,31 @@ import { findByName } from './modules/voter/controllers/findByName'
 import { registerVoter } from './modules/voter/controllers/register'
 // import { updateVoter } from './modules/voter/controllers/update'
 import { sendVote } from './modules/vote/controllers/sendVote'
+import { refresh } from './modules/auth/controllers/refresh'
+import { registerEmployee } from './modules/employee/controllers/register-employee'
+import { findByEmployerId } from './modules/employee/controllers/findByEmployerId'
+import { deleteByUserId } from './modules/auth/controllers/deleteByUserId'
+import { fetchResearchesByCreatorId } from './modules/research/controllers/fetchResearchesByCreatorId'
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/sign-in', signIn)
   fastify.post('/sign-up', signUp)
   fastify.post('/logout', logout)
+  fastify.post('/refresh', refresh)
+  fastify.delete('/delete/:id', deleteByUserId)
+}
+
+const employeeRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.post('/register-employee', registerEmployee)
+  fastify.get('/findByEmployerId/:id', findByEmployerId)
 }
 
 const researchRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/register', register)
   fastify.put('/update', update)
-  fastify.delete('/delete', deleteResearch)
+  fastify.delete('/delete/:id', deleteResearch)
   fastify.get('/', fetchResearches)
+  fastify.get('/creator/:creatorId', fetchResearchesByCreatorId)
 }
 
 const candidateRoutes: FastifyPluginAsync = async (fastify) => {
@@ -61,5 +74,6 @@ export const registerRoutes = async (app: FastifyInstance) => {
     fastify.register(candidateRoutes, { prefix: '/candidate' })
     fastify.register(voterRoutes, { prefix: '/voter' })
     fastify.register(voteRoutes, { prefix: '/vote' })
+    fastify.register(employeeRoutes, { prefix: '/employee' })
   })
 }

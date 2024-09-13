@@ -1,27 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  BarChart3Icon,
-  LineChartIcon,
-  PieChartIcon,
-  ScatterChartIcon,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Research } from "../home/page";
-import { UNSTABLE_REVALIDATE_RENAME_ERROR } from "next/dist/lib/constants";
-import { getCookie } from "@/utils/cookieUtils";
-import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
 
 const researchCards = [
   {
@@ -48,7 +40,6 @@ export default function Component() {
   const [userData, setUserData] = useState<CustomJWTPayload | null>(null);
 
   useEffect(() => {
-    console.log("a")
     const cookieToken = getCookie('token');
     setToken(cookieToken);
 
@@ -95,14 +86,17 @@ export default function Component() {
         Selecione uma pesquisa para ver os gráficos e análises detalhados.
       </p>
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
           {researches.map((card, index) => (
             <Card
               key={index}
               className={`cursor-pointer transition-all hover:shadow-md ${
                 selectedCard === index ? "ring-2 ring-primary" : ""
               }`}
-              onClick={() => setSelectedCard(index)}
+              onClick={() => {
+                setSelectedCard(index)
+                setIsLoading(true)
+              }}
             >
               <Link href={`/resultados/${card.id}`}>
                 <CardHeader>

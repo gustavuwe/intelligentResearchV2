@@ -1,7 +1,7 @@
 "use client";
 
-import { cache, useEffect, useRef, useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Candidate } from "@/app/home/page";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,21 +16,20 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification";
 import axios from "axios";
-import { Candidate } from "@/app/home/page";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { getCookie } from "@/utils/cookieUtils";
-import { CustomJWTPayload, verifyJWT } from "@/utils/jwtVerification";
+import { HomeIcon, Menu } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet.heat'
-// @ts-ignore
-import L from 'leaflet'
+import L from 'leaflet';
+import 'leaflet.heat';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import Link from "next/link";
+import HeatmapSection from "@/components/resultados/heatmapSection";
 
 declare global {
   interface Window {
@@ -71,53 +70,19 @@ interface VoteData2 {
   updatedAt?: string;
 }
 
-// id           String    @id @default(uuid())
-//   voter        Voter     @relation(fields: [voterId], references: [id])
-//   voterId      String
-//   candidate    Candidate @relation(fields: [candidateId], references: [id])
-//   candidateId  String
-//   research     Research  @relation(fields: [researchId], references: [id])
-//   researchId   String
-//   lat          String?
-//   long         String?
-//   neighborhood String?
-//   createdAt    DateTime  @default(now())
-//   updatedAt    DateTime  @updatedAt
+function ChangeView({ center, zoom }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, zoom, map]);
+  return null;
+}
 
-// const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number }) => {
-//   const map = useMap()
-//   const heatLayerRef = useRef<any>(null)
-
-//   useEffect(() => {
-//     if (!map) return
-
-//     if (heatLayerRef.current) {
-//       map.removeLayer(heatLayerRef.current)
-//     }
-
-//     // @ts-ignore
-//     heatLayerRef.current = L.heatLayer(data, { radius: 25 }).addTo(map)
-
-//     return () => {
-//       if (heatLayerRef.current) {
-//         map.removeLayer(heatLayerRef.current)
-//       }
-//     }
-//   }, [map, data, intensity])
-
-//   return null
-// }
-
-const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number }) => {
+const HeatmapLayer = ({ data, intensity, mapCenter }: { data: number[][], intensity: number, mapCenter: number[] }) => {
   const map = useMap();
   const heatLayerRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log("HeatmapLayer useEffect called");
-    console.log("Map:", map);
-    console.log("Data:", data);
-    console.log("Intensity:", intensity);
-
     if (!map) return;
 
     // Remove o heatmap antigo, se houver
@@ -141,7 +106,7 @@ const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number
         map.removeLayer(heatLayerRef.current);
       }
     };
-  }, [map, data, intensity]);
+  }, [map, data, intensity, mapCenter]);
 
   return null;
 };
@@ -169,19 +134,12 @@ export default function Component() {
   const [intensity, setIntensity] = useState(1)
   const [isAsideOpen, setIsAsideOpen] = useState(false)
   const [heatmapData2, setHeatmapData2] = useState<number[][]>([]);
+  const [mapCenter, setMapCenter] = useState([-11.620693, -49.358930]);
+  const [hasSelectedCandidate, setHasSelectedCandidate] = useState(false);
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
-
-  const heatmapData = [
-    [51.505, -0.09, 0.5],
-    [51.51, -0.1, 0.7],
-    [51.51, -0.12, 0.3],
-    [51.52, -0.11, 0.6],
-    [51.53, -0.1, 0.4],
-    [51.51, -0.08, 0.8],
-  ]
+  }, [heatmapData2])
 
   useEffect(() => {
     async function checkAuth() {
@@ -256,6 +214,15 @@ export default function Component() {
   }, [params]);
 
   useEffect(() => {
+    console.log("heatmapDataaaaaaaa:", heatmapData2[0]?.[0])
+    if (heatmapData2?.length > 0) {
+      const lat = !isNaN(Number(heatmapData2[0]?.[0])) ? heatmapData2[0]?.[0] : -6.262140;
+      const long = !isNaN(Number(heatmapData2[0]?.[1])) ? heatmapData2[0]?.[1] : -36.514332;
+      setMapCenter([lat, long]);
+    }
+  }, [heatmapData2]); // O efeito vai rodar sempre que heatmapData2 mudar
+
+  useEffect(() => {
     if (candidatesData2.length > 0) {
       const geralDataVariable: CandidateData[] = [{ name: "todos os candidatos", data: [] }];
 
@@ -277,15 +244,6 @@ export default function Component() {
     const allLocations: number[][] = []
 
     // @ts-ignore
-    // data?.Vote.forEach((vote: VoteData2): number[] => {
-    //   // const location: locationsData = {
-    //   //   lat: vote.lat,
-    //   //   long: vote.long,
-    //   //   intensity: 1,
-    //   // }
-    //   const location: number[] = [parseFloat(vote.lat), parseFloat(vote.long)]
-    //   allLocations.push(location)
-    // })
     data?.Vote.forEach((vote: VoteData2) => {
       const location: number[] = [parseFloat(vote.lat), parseFloat(vote.long)]
       allLocations.push(location)
@@ -293,8 +251,7 @@ export default function Component() {
 
     setHeatmapData2(allLocations)
     
-    
-  }, [fullCandidatesData, selectedCandidate, heatmapData2])
+  }, [fullCandidatesData, selectedCandidate])
 
   if (isLoading || !isMounted) {
     return <Loading />;
@@ -320,7 +277,10 @@ export default function Component() {
                   selectedCandidate.name === candidate.name ? "default" : "ghost"
                 }
                 className="w-full justify-start"
-                onClick={() => setSelectedCandidate(candidate)}
+                onClick={() => {
+                  setSelectedCandidate(candidate);
+                  setHasSelectedCandidate(true);
+                }}
               >
                 {candidate.name}
               </Button>
@@ -331,7 +291,7 @@ export default function Component() {
 
       {/* Hamburger Menu for Mobile */}
       <div className="md:hidden">
-        <Sheet>
+        <Sheet onOpenChange={setIsAsideOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" className="p-2" onClick={() => setIsAsideOpen(true)}>
               <Menu className="h-6 w-6" />
@@ -356,6 +316,16 @@ export default function Component() {
                 </Button>
                 </SheetClose>
               ))}
+              <SheetClose asChild className="text-center">
+                <Button
+                  className="gap-2 justify-start w-full bg-gray-600"
+                  variant="default"
+                >
+                  <Link href="/home" className="flex flex-row gap-2">
+                    <HomeIcon size={18}/> Home
+                  </Link>
+                </Button>
+              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>
@@ -373,8 +343,8 @@ export default function Component() {
               <BarChart
                 data={selectedCandidate.data}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                width={500} // You can adjust or remove the width to make it responsive
-                height={300} // Adjust the height as needed
+                width={500}
+                height={300}
               >
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="neighborhood" tickLine={false} tickMargin={10} axisLine={false} />
@@ -389,42 +359,60 @@ export default function Component() {
             </div>
           </CardFooter>
         </Card>
-            {/* <div className="pt-[80px]">
-              <h1 className="font-bold text-2xl sm:ml-[25%]">Visualização do gráfico acima</h1>
-              <p className="pt-3 text-lg max-w-[350px] sm:ml-[25%] text-center">Grafico de barras separado por bairros com a quantidade de votos do candidato selecionado.</p>
-            </div> */}
       </main>
     </div>
-    <section className={`mt-[120px] md:mt-[400px] min-h-[1000px] rounded-lg overflow-hidden`}>
-      <h1 className="font-bold text-6xl text-center text-tracking-tight">Heatmap</h1>
-      <div className="w-full space-y-4">
-      <div className="mt-4 h-[500px] rounded-lg overflow-hidden shadow-lg">
-        <MapContainer center={[-6.262768, -36.514487]} zoom={14} style={{ height: '100%', width: '100%' }}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <HeatmapLayer data={heatmapData2} intensity={intensity} />
-        </MapContainer>
-      </div>
-      <div className="flex items-center space-x-4">
-        <label htmlFor="intensity-slider" className="text-sm font-medium text-gray-700 whitespace-nowrap">
-          Intensidade:
-        </label>
-        <input
-          id="intensity-slider"
-          type="range"
-          min="0.2"
-          max="10"
-          step="0.2"
-          value={intensity}
-          onChange={(e) => setIntensity(parseFloat(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-        <span className="text-sm font-medium text-gray-700 w-8 text-right">{intensity.toFixed(1)}</span>
-      </div>
+    {hasSelectedCandidate === true ? (
+      <section className={`mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden ${isAsideOpen === true ? "hidden" : ""}`}>
+      <div className="py-12 px-6 md:px-12">
+        <h1 className="font-bold text-4xl md:text-6xl text-center tracking-tight text-gray-800 mb-8">
+          Heatmap
+        </h1>
+        <div className="w-full space-y-6">
+          <div className="h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
+            <MapContainer
+              center={[mapCenter[0], mapCenter[1]]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <HeatmapLayer data={heatmapData2} intensity={intensity} mapCenter={mapCenter} />
+            </MapContainer>
+          </div>
+          <div className="flex items-center justify-center space-x-6 mt-6">
+            <label
+              htmlFor="intensity-slider"
+              className="text-sm font-medium text-gray-700"
+            >
+              Intensidade:
+            </label>
+            <input
+              id="intensity-slider"
+              type="range"
+              min="0.2"
+              max="10"
+              step="0.2"
+              value={intensity}
+              onChange={(e) => setIntensity(parseFloat(e.target.value))}
+              className="w-3/4 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-sm font-medium text-gray-700 w-12 text-right">
+              {intensity.toFixed(1)}
+            </span>
+          </div>
+        </div>
       </div>
     </section>
+    ) : null}
+    {/* <HeatmapSection 
+  isAsideOpen={isAsideOpen}
+  mapCenter={mapCenter}
+  heatmapData2={heatmapData2}
+  intensity={intensity}
+  setIntensity={setIntensity}
+/> */}
     </>
   );
 }

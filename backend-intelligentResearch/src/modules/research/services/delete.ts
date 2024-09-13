@@ -1,12 +1,9 @@
 import { prisma } from '@/lib/prisma'
-import { deleteResearchSchema, DeleteResearchSchema } from '../schemas/delete'
 
-export const deleteResearch = async (id: DeleteResearchSchema) => {
-  const parsedData = deleteResearchSchema.parse(id)
-
+export const deleteResearch = async (id: string) => {
   return prisma.research.delete({
     where: {
-      id: parsedData.id,
+      id,
     },
   })
 }

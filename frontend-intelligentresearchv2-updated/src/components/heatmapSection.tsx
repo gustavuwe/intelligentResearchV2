@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'rc-slider/assets/index.css';
-import Slider from 'rc-slider';
-import * as L from 'leaflet';
-import 'leaflet.heat';
+"use client";
 
-const HeatmapLayer: React.FC<{ points: any[]; intensity: number }> = ({ points, intensity }) => {
+import * as L from "leaflet";
+import "leaflet.heat";
+import "leaflet/dist/leaflet.css";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+
+const HeatmapLayer: React.FC<{ points: any[]; intensity: number }> = ({
+  points,
+  intensity,
+}) => {
   const map = useMap();
 
   useEffect(() => {
     const heatLayer = L.heatLayer(
-      points.map(p => [p.lat, p.lng, p.intensity * intensity]),
+      points.map((p) => [p.lat, p.lng, p.intensity * intensity]),
       { radius: 25, blur: 15, maxZoom: 17 }
     ).addTo(map);
 
@@ -28,7 +33,6 @@ const HeatmapSection: React.FC = () => {
     { lat: 37.7749, lng: -122.4194, intensity: 0.5 },
     { lat: 37.7849, lng: -122.4294, intensity: 0.6 },
     { lat: 37.7649, lng: -122.4094, intensity: 0.7 },
-    // Adicione mais pontos conforme necessário
   ];
 
   const [intensity, setIntensity] = useState<number>(1);
@@ -47,13 +51,16 @@ const HeatmapSection: React.FC = () => {
         <HeatmapLayer points={points} intensity={intensity} />
       </MapContainer>
       <div className="mt-5">
-        <h3 className="text-lg font-medium mb-2">Ajustar Intensidade do Heatmap</h3>
+        <h3 className="text-lg font-medium mb-2">
+          Ajustar Intensidade do Heatmap
+        </h3>
         <Slider
           min={0.1}
           max={3}
           step={0.1}
           value={intensity}
-          onChange={value => setIntensity(value)}
+          // @ts-ignore
+          onChange={(value) => setIntensity(value)}
         />
       </div>
     </div>

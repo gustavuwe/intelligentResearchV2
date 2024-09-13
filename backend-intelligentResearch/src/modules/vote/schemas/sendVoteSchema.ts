@@ -1,3 +1,4 @@
+import { VoteSchema } from '@/modules/research/schemas/register'
 import { z } from 'zod'
 
 /* 
@@ -13,10 +14,12 @@ import { z } from 'zod'
 */
 export const sendVoteSchema = z.object({
   voterName: z.string(),
-  candidateName: z.string(),
+  phoneNumber: z.string(),
+  candidateId: z.string(),
   researchId: z.string(),
   lat: z.string(),
   long: z.string(),
+  Vote: z.array(VoteSchema),
 })
 
 export type SendVoteSchema = z.infer<typeof sendVoteSchema>

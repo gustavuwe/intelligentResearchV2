@@ -20,6 +20,11 @@ export const register = async (data: RegisterResearchSchema) => {
           votes: candidate.votes,
         })),
       },
+      creator: {
+        connect: {
+          id: parsedData.creatorId,
+        },
+      },
       Vote: {
         create: parsedData.Vote.map((vote) => ({
           id: vote.id,

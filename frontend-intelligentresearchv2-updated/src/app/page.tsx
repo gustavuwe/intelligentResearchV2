@@ -1,17 +1,18 @@
 "use client"
 
-import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { MapPin, Clock, Search, Zap, BarChart, Users, ChevronRight, Menu, MenuIcon, HomeIcon, MedalIcon, BlocksIcon, LogInIcon } from "lucide-react"
-import Link from 'next/link'
-import Image from 'next/image'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import 'dotenv/config'
+import { BlocksIcon, ChevronRight, Clock, HomeIcon, LogInIcon, MapPin, MedalIcon, MenuIcon, Search, Zap } from "lucide-react"
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Component() {
   const [email, setEmail] = useState('')
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +20,6 @@ export default function Component() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    console.log(process.env.NEXT_PUBLIC_API_URL)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -86,7 +86,7 @@ export default function Component() {
                       className="gap-2 justify-start"
                       variant="outline"
                     >
-                      <Link href="/login" className="flex flex-row gap-2">
+                      <Link href="/home" className="flex flex-row gap-2">
                         <LogInIcon size={18}/> Entrar
                       </Link>
                     </Button>
@@ -118,10 +118,12 @@ export default function Component() {
                 </p>
               </div>
               <Button className="inline-flex h-12 items-center justify-center rounded-full bg-yellow-400 px-8 text-lg font-bold text-black shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-white">
+                <Link href="#getInTouch" className="inline-flex items-center justify-center">
                 Comece a Explorar
                 <ChevronRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
-              <p className="pt-2">Já é cliente? <Link href="/login" className="bg-yellow-400 px-3 py-[3px] rounded-md text-black font-bold hover:px-[20px] transition-all">Entre</Link></p>
+              <p className="pt-2">Já é cliente? <Link href="/home" className="bg-yellow-400 px-3 py-[3px] rounded-md text-black font-bold hover:px-[20px] transition-all">Entre</Link></p>
             </div>
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
@@ -167,79 +169,6 @@ export default function Component() {
             </div>
           </div>
         </section>
-        {/* <section id="testimonials" className="py-20 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 skew-y-3 transform -mt-20">
-          <div className="container px-4 md:px-6 -skew-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-white">Researcher Testimonials</h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Dr. Emily Chen</h3>
-                    <p className="text-sm text-gray-500">Professor of Biology, Stanford University</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    ResearchRover has transformed my workflow. Its like having a brilliant research assistant available 24/7.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Dr. Michael Patel</h3>
-                    <p className="text-sm text-gray-500">Lead Researcher, NASA</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    The geo-location feature in ResearchRover has been instrumental in our climate change studies across different regions.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-                <div className="flex flex-col items-center space-y-3 text-center">
-                  <Image
-                    alt="User"
-                    className="rounded-full border-4 border-yellow-400"
-                    height="80"
-                    src="/placeholder.svg?height=80&width=80"
-                    style={{
-                      aspectRatio: "80/80",
-                      objectFit: "cover",
-                    }}
-                    width="80"
-                  />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold">Sarah Johnson</h3>
-                    <p className="text-sm text-gray-500">PhD Candidate, MIT</p>
-                  </div>
-                  <p className="text-gray-600 italic">
-                    As a PhD student, ResearchRovers time-saving tools have been a game-changer. I can focus more on analysis and less on administrative tasks.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section> */}
         <section id="testimonials" className="py-20 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 skew-y-3 transform -mt-20">
           <div className="container px-4 md:px-6 -skew-y-3 h-[300px]">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-white">
@@ -248,7 +177,7 @@ export default function Component() {
             <p className="mx-auto text-center font-bold max-w-[600px] text-white md:text-xl/relaxed lg:text-2xl/relaxed">Seja um dos pioneiros a desfrutar da <span className="text-blue-300">NOSSA</span> tecnologia para pesquisas.</p>
           </div>
         </section>
-        <section className="py-20 bg-black text-white transform -mt-20">
+        <section id="getInTouch" className="py-20 bg-black text-white transform -mt-20">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
@@ -260,16 +189,11 @@ export default function Component() {
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <form className="flex space-x-2">
-                  <Input
-                    className="max-w-lg flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
-                    placeholder="Insira seu email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                <form className="flex items-center justify-center">
                   <Button type="submit" className="bg-yellow-400 text-black font-bold hover:bg-yellow-300">
-                    Começar
+                  <a href="https://wa.me/5584998287178?text=Olá, gostaria de saber mais sobre seus serviços!" target="_blank">
+                    Enviar mensagem no WhatsApp
+                  </a>
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>

@@ -6,11 +6,16 @@ import { ZodError } from 'zod'
 import { registerRoutes } from '../router'
 import { env } from './env'
 
-export const app = Fastify()
+export const app = Fastify({
+  logger: {
+    level: 'debug',
+  },
+})
 
 app.register(cors, {
   // allow all origins
-  origin: true,
+  // origin: true,
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
