@@ -31,7 +31,7 @@ import { useState } from "react";
 // }
 
 
-export const DialogAddNewCandidate = ({ researchID }: { researchID: string }) => {
+export const DialogAddNewCandidate = ({ researchID, onAddCandidate }: { researchID: string; onAddCandidate: () => void}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { mutate: createCandidate, isLoading, revalidateQuery } = useCreateCandidate(researchID);
@@ -58,6 +58,7 @@ export const DialogAddNewCandidate = ({ researchID }: { researchID: string }) =>
       return toast.error("Houve um erro ao tentar adicionar um candidato");
     }
 
+    onAddCandidate(researchID, response?.data);
     revalidateQuery("/candidate");
     toast.success("Candidato adicionado com sucesso!");
   };

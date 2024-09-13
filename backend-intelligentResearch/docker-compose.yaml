@@ -24,9 +24,9 @@ services:
       - 26257:26257
       - 8080:8080
     environment:
-      - COCKROACH_USER=${POSTGRES_USER}
-      - COCKROACH_PASSWORD=${POSTGRES_PASSWORD}
-      - COCKROACH_DB=${POSTGRES_DB}
+      - COCKROACH_USER=${COCKROACH_USER}
+      - COCKROACH_PASSWORD=${COCKROACH_PASSWORD}
+      - COCKROACH_DB=${COCKROACH_DB}
     volumes:
       - ./cockroach-data:/cockroach/cockroach-data
 

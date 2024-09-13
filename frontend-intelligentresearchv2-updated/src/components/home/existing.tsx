@@ -24,6 +24,7 @@ export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
   const [data, setData] = useState<any>([]);
   const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [employerId, setEmployerId] = useState<string>("");
 
   useEffect(() => {
     const payload = verifyJWT();
@@ -40,15 +41,26 @@ export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
     };
     if (payload) {
       fetchData(payload.sub);
+      setEmployerId(payload.sub);
     }
   }, [])
+
+  const handleAddCandidate = async () => {
+
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/research/creator/${employerId}`, {
+      withCredentials: true,
+    });
+    if (response.status == 200) {
+      setData(response.data);
+    }
+  };
 
   if (isLoading || error) {
     return (
       <div>
         <Loading />
         {error && (
-          <p className="text-red-500">An unexpected error ocurred: {error}</p>
+          <p className="text-red-500">An unexpected error ocurred: {error}</p> 
         )}
       </div>
     );
@@ -81,7 +93,7 @@ export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
                         {research.Vote.length}
                       </p>
                       <DialogAddNewVote researchID={research.id} />
-                      <DialogAddNewCandidate researchID={research.id} />
+                      <DialogAddNewCandidate researchID={research.id} onAddCandidate={handleAddCandidate} />
                       {isAdmin && (
                         <AlertDialogRemoveResearch researchID={research.id} />
                       )}

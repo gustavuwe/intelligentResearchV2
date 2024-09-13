@@ -29,6 +29,7 @@ import 'leaflet.heat';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import Link from "next/link";
+import HeatmapSection from "@/components/resultados/heatmapSection";
 
 declare global {
   interface Window {
@@ -69,8 +70,15 @@ interface VoteData2 {
   updatedAt?: string;
 }
 
+function ChangeView({ center, zoom }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, zoom, map]);
+  return null;
+}
 
-const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number }) => {
+const HeatmapLayer = ({ data, intensity, mapCenter }: { data: number[][], intensity: number, mapCenter: number[] }) => {
   const map = useMap();
   const heatLayerRef = useRef<any>(null);
 
@@ -98,7 +106,7 @@ const HeatmapLayer = ({ data, intensity }: { data: number[][], intensity: number
         map.removeLayer(heatLayerRef.current);
       }
     };
-  }, [map, data, intensity]);
+  }, [map, data, intensity, mapCenter]);
 
   return null;
 };
@@ -126,10 +134,12 @@ export default function Component() {
   const [intensity, setIntensity] = useState(1)
   const [isAsideOpen, setIsAsideOpen] = useState(false)
   const [heatmapData2, setHeatmapData2] = useState<number[][]>([]);
+  const [mapCenter, setMapCenter] = useState([-11.620693, -49.358930]);
+  const [hasSelectedCandidate, setHasSelectedCandidate] = useState(false);
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
+  }, [heatmapData2])
 
   useEffect(() => {
     async function checkAuth() {
@@ -204,6 +214,15 @@ export default function Component() {
   }, [params]);
 
   useEffect(() => {
+    console.log("heatmapDataaaaaaaa:", heatmapData2[0]?.[0])
+    if (heatmapData2?.length > 0) {
+      const lat = !isNaN(Number(heatmapData2[0]?.[0])) ? heatmapData2[0]?.[0] : -6.262140;
+      const long = !isNaN(Number(heatmapData2[0]?.[1])) ? heatmapData2[0]?.[1] : -36.514332;
+      setMapCenter([lat, long]);
+    }
+  }, [heatmapData2]); // O efeito vai rodar sempre que heatmapData2 mudar
+
+  useEffect(() => {
     if (candidatesData2.length > 0) {
       const geralDataVariable: CandidateData[] = [{ name: "todos os candidatos", data: [] }];
 
@@ -232,7 +251,6 @@ export default function Component() {
 
     setHeatmapData2(allLocations)
     
-    
   }, [fullCandidatesData, selectedCandidate])
 
   if (isLoading || !isMounted) {
@@ -259,7 +277,10 @@ export default function Component() {
                   selectedCandidate.name === candidate.name ? "default" : "ghost"
                 }
                 className="w-full justify-start"
-                onClick={() => setSelectedCandidate(candidate)}
+                onClick={() => {
+                  setSelectedCandidate(candidate);
+                  setHasSelectedCandidate(true);
+                }}
               >
                 {candidate.name}
               </Button>
@@ -340,79 +361,58 @@ export default function Component() {
         </Card>
       </main>
     </div>
-    {/* <section className={`mt-[120px] md:mt-[400px] min-h-[1000px] rounded-lg overflow-hidden`}>
-      <h1 className="font-bold text-6xl text-center text-tracking-tight">Heatmap</h1>
-      <div className="w-full space-y-4">
-      <div className="mt-4 h-[500px] rounded-lg overflow-hidden shadow-lg">
-        <MapContainer center={[-6.262768, -36.514487]} zoom={14} style={{ height: '100%', width: '100%' }}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <HeatmapLayer data={heatmapData2} intensity={intensity} />
-        </MapContainer>
+    {hasSelectedCandidate === true ? (
+      <section className={`mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden ${isAsideOpen === true ? "hidden" : ""}`}>
+      <div className="py-12 px-6 md:px-12">
+        <h1 className="font-bold text-4xl md:text-6xl text-center tracking-tight text-gray-800 mb-8">
+          Heatmap
+        </h1>
+        <div className="w-full space-y-6">
+          <div className="h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
+            <MapContainer
+              center={[mapCenter[0], mapCenter[1]]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <HeatmapLayer data={heatmapData2} intensity={intensity} mapCenter={mapCenter} />
+            </MapContainer>
+          </div>
+          <div className="flex items-center justify-center space-x-6 mt-6">
+            <label
+              htmlFor="intensity-slider"
+              className="text-sm font-medium text-gray-700"
+            >
+              Intensidade:
+            </label>
+            <input
+              id="intensity-slider"
+              type="range"
+              min="0.2"
+              max="10"
+              step="0.2"
+              value={intensity}
+              onChange={(e) => setIntensity(parseFloat(e.target.value))}
+              className="w-3/4 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-sm font-medium text-gray-700 w-12 text-right">
+              {intensity.toFixed(1)}
+            </span>
+          </div>
+        </div>
       </div>
-      <div className="flex items-center space-x-4">
-        <label htmlFor="intensity-slider" className="text-sm font-medium text-gray-700 whitespace-nowrap">
-          Intensidade:
-        </label>
-        <input
-          id="intensity-slider"
-          type="range"
-          min="0.2"
-          max="10"
-          step="0.2"
-          value={intensity}
-          onChange={(e) => setIntensity(parseFloat(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-        <span className="text-sm font-medium text-gray-700 w-8 text-right">{intensity.toFixed(1)}</span>
-      </div>
-      </div>
-    </section> */}
-    <section className={`mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden ${isAsideOpen === true ? "hidden" : ""}`}>
-  <div className="py-12 px-6 md:px-12">
-    <h1 className="font-bold text-4xl md:text-6xl text-center tracking-tight text-gray-800 mb-8">
-      Heatmap
-    </h1>
-    <div className="w-full space-y-6">
-      <div className="h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
-        <MapContainer
-          center={[-6.262768, -36.514487]}
-          zoom={14}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <HeatmapLayer data={heatmapData2} intensity={intensity} />
-        </MapContainer>
-      </div>
-      <div className="flex items-center justify-center space-x-6 mt-6">
-        <label
-          htmlFor="intensity-slider"
-          className="text-sm font-medium text-gray-700"
-        >
-          Intensidade:
-        </label>
-        <input
-          id="intensity-slider"
-          type="range"
-          min="0.2"
-          max="10"
-          step="0.2"
-          value={intensity}
-          onChange={(e) => setIntensity(parseFloat(e.target.value))}
-          className="w-3/4 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-        />
-        <span className="text-sm font-medium text-gray-700 w-12 text-right">
-          {intensity.toFixed(1)}
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
+    ) : null}
+    {/* <HeatmapSection 
+  isAsideOpen={isAsideOpen}
+  mapCenter={mapCenter}
+  heatmapData2={heatmapData2}
+  intensity={intensity}
+  setIntensity={setIntensity}
+/> */}
     </>
   );
 }

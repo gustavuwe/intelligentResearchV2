@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuthentication } from "@/hooks/useAuthentication";
 import axios from "axios";
 import { ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
@@ -13,27 +14,17 @@ const GetInTouch = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  const { authenticated, isAdmin } = useAuthentication();
+  const [isMounted, setIsMounted] = useState(false);
+  
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
-          withCredentials: true,
-        });
-
-        console.log(response)
-
-        if (response.status !== 200) {
-          router.push("/login");
-        } else {
-          setIsLoading(false);
-        }
-      } catch (err) {
-        console.error("Token verification failed:", err);
-        router.push("/login");
-      }
-    };
-    verifyToken();
-}, [router]);
+    if (!authenticated) {
+      router.push("/login");
+    } else {
+      setIsMounted(true);  // Indicates that component has been mounted
+      setIsLoading(false);
+    }
+  }, [authenticated, router]);
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
@@ -61,6 +52,10 @@ const GetInTouch = () => {
   if (isLoading) return (
     <Loading />
   )
+
+  if (!isMounted) {
+    return null;  // Avoid rendering anything until the component is mounted
+  }
 
   return (
     <>

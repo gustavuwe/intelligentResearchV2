@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 export default function Component() {
   const [email, setEmail] = useState('')
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -117,8 +118,10 @@ export default function Component() {
                 </p>
               </div>
               <Button className="inline-flex h-12 items-center justify-center rounded-full bg-yellow-400 px-8 text-lg font-bold text-black shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-white">
+                <Link href="#getInTouch" className="inline-flex items-center justify-center">
                 Comece a Explorar
                 <ChevronRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
               <p className="pt-2">Já é cliente? <Link href="/home" className="bg-yellow-400 px-3 py-[3px] rounded-md text-black font-bold hover:px-[20px] transition-all">Entre</Link></p>
             </div>
@@ -174,7 +177,7 @@ export default function Component() {
             <p className="mx-auto text-center font-bold max-w-[600px] text-white md:text-xl/relaxed lg:text-2xl/relaxed">Seja um dos pioneiros a desfrutar da <span className="text-blue-300">NOSSA</span> tecnologia para pesquisas.</p>
           </div>
         </section>
-        <section className="py-20 bg-black text-white transform -mt-20">
+        <section id="getInTouch" className="py-20 bg-black text-white transform -mt-20">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
@@ -186,16 +189,11 @@ export default function Component() {
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <form className="flex space-x-2">
-                  <Input
-                    className="max-w-lg flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
-                    placeholder="Insira seu email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                <form className="flex items-center justify-center">
                   <Button type="submit" className="bg-yellow-400 text-black font-bold hover:bg-yellow-300">
-                    Começar
+                  <a href="https://wa.me/5584998287178?text=Olá, gostaria de saber mais sobre seus serviços!" target="_blank">
+                    Enviar mensagem no WhatsApp
+                  </a>
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
