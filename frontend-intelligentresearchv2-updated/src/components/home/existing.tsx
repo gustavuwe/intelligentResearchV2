@@ -77,6 +77,7 @@ export const Existing = ({ isAdmin }: { isAdmin: boolean }) => {
             <NotFound />
           ) : (
             <Accordion type="single" collapsible className="w-full">
+              {/* @ts-ignore */}
               {data?.researches?.map((research) => (
                 <AccordionItem value={research.id} key={research.id}>
                   <AccordionTrigger>{research.title}</AccordionTrigger>

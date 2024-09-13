@@ -13,7 +13,7 @@ import { CustomJWTPayload, getCookie, verifyJWT } from "@/utils/jwtVerification"
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Research } from "../home/page";
+import type { Research } from "@/api/research";
 
 const researchCards = [
   {

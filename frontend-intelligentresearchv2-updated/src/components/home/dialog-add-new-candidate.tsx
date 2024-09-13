@@ -58,7 +58,7 @@ export const DialogAddNewCandidate = ({ researchID, onAddCandidate }: { research
       return toast.error("Houve um erro ao tentar adicionar um candidato");
     }
 
-    onAddCandidate(researchID, response?.data);
+    onAddCandidate();
     revalidateQuery("/candidate");
     toast.success("Candidato adicionado com sucesso!");
   };

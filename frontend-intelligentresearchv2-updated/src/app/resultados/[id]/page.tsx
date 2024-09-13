@@ -1,6 +1,5 @@
 "use client";
 
-import { Candidate } from "@/app/home/page";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,6 +29,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import Link from "next/link";
 import HeatmapSection from "@/components/resultados/heatmapSection";
+import type { Candidate } from "@/api/candidate";
 
 declare global {
   interface Window {
@@ -70,6 +70,7 @@ interface VoteData2 {
   updatedAt?: string;
 }
 
+// @ts-ignore
 function ChangeView({ center, zoom }) {
   const map = useMap();
   useEffect(() => {

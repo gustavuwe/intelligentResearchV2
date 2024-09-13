@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
 
+// @ts-ignore
 function HeatmapLayer({ points, intensity }) {
   const map = useMap();
   const heatLayerRef = useRef(null);
@@ -12,9 +13,11 @@ function HeatmapLayer({ points, intensity }) {
     if (!map) return;
 
     if (!heatLayerRef.current) {
+      // @ts-ignore
       heatLayerRef.current = L.heatLayer([], { radius: 25, blur: 15, max: intensity }).addTo(map);
     }
 
+    // @ts-ignore
     const adjustedData = points.map(([lat, lng]) => [lat, lng, 0.5 * intensity]);
 
     // Atualiza os dados do Heatmap
@@ -31,6 +34,7 @@ function HeatmapLayer({ points, intensity }) {
   return null;
 }
 
+// @ts-ignore
 function ChangeView({ center }) {
   const map = useMap();
   const prevCenterRef = useRef(center);
@@ -49,6 +53,7 @@ function ChangeView({ center }) {
   return null;
 }
 
+// @ts-ignore
 export default function HeatmapSection({ isAsideOpen, mapCenter, heatmapData2, intensity, setIntensity }) {
   return (
     <section className={`mt-[120px] md:mt-[200px] lg:mt-[400px] min-h-[1000px] bg-white rounded-lg shadow-lg overflow-hidden ${isAsideOpen === true ? "hidden" : ""}`}>

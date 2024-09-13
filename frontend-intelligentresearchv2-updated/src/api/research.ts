@@ -2,7 +2,7 @@ import { useAPIMutation, useAPIQuery } from "@/hooks/useApi";
 import { Candidate } from "./candidate";
 import { Vote } from "./Vote";
 
-type Research = {
+export type Research = {
   id: string;
   title: string;
   startDate: string;
@@ -10,7 +10,7 @@ type Research = {
   candidates: Candidate[];
   Vote: Vote[];
 }
-type ResearchResponse = {
+export type ResearchResponse = {
   researches: Research[];
 
 }
