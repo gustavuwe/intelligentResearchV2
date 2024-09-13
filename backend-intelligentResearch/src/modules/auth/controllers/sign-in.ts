@@ -21,13 +21,13 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
         path: '/',
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
       })
       .setCookie('refreshToken', refreshToken, {
         path: '/',
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
       })
       .send({
         sub: user.id,
