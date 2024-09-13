@@ -15,11 +15,12 @@ export const app = Fastify({
 app.register(cors, {
   // allow all origins
   // origin: true,
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 })
+
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
