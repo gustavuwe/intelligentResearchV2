@@ -16,18 +16,46 @@ export const signIn = async (request: FastifyRequest, reply: FastifyReply) => {
     }
 
     const { accessToken, refreshToken } = generateTokens(user)
+    // BACKUP
+
+    // reply
+    //   .setCookie('token', accessToken, {
+    //     path: '/',
+    //     httpOnly: false,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: 'lax',
+    //   })
+    //   .setCookie('refreshToken', refreshToken, {
+    //     path: '/',
+    //     httpOnly: false,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: 'lax',
+    //   })
+    //   .send({
+    //     sub: user.id,
+    //     role: user.role,
+    //   })
+
     reply
       .setCookie('token', accessToken, {
         path: '/',
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? 'https://intelligentresearch.vercel.app'
+            : undefined,
       })
       .setCookie('refreshToken', refreshToken, {
         path: '/',
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? 'https://intelligentresearch.vercel.app'
+            : undefined,
       })
       .send({
         sub: user.id,
